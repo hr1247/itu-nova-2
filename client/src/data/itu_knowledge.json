@@ -1,0 +1,456 @@
+{
+  "university": {
+    "name": "Information Technology University",
+    "acronym": "ITU",
+    "city": "Lahore",
+    "country": "Pakistan",
+    "established": 2012,
+    "charter": "Chartered by the Government of Punjab and recognized by the Higher Education Commission (HEC) & National Computing Education Accreditation Council (NCEAC).",
+    "campuses": [
+      {
+        "name": "Main City Campus",
+        "location": "Arfa Software Technology Park (ASTP), Ferozepur Road, Lahore",
+        "floors": "Floors 3, 4, 6, 8, and 9",
+        "description": "Located in Punjab's premier IT hub, providing students direct proximity to leading tech companies, incubation centers, and government IT bodies."
+      },
+      {
+        "name": "New Permanent Campus",
+        "location": "Barki Road, Lahore",
+        "status": "Phased development / Mega Campus site spanning 183+ acres."
+      }
+    ],
+    "contact": {
+      "phone": "+92-42-111-111-ITU (488)",
+      "admissionsEmail": "admission@itu.edu.pk",
+      "generalEmail": "info@itu.edu.pk",
+      "website": "https://itu.edu.pk"
+    }
+  },
+  "academicPrograms": {
+    "undergraduate": [
+      {
+        "id": "bscs",
+        "name": "Bachelor of Science in Computer Science",
+        "code": "BSCS",
+        "degreeDurationYears": 4,
+        "semesters": 8,
+        "totalCreditHours": 134,
+        "accreditation": "NCEAC Highest 'W' Category Accreditation & HEC Recognized",
+        "overview": "The BS Computer Science program provides rigorous foundations in algorithms, software systems, computer architecture, data science, and cloud computing. It prepares students for high-impact software engineering, research, and startup leadership.",
+        "eligibility": {
+          "academicQualifications": [
+            "At least 50% overall marks in Intermediate (HSSC) Pre-Engineering, ICS (Mathematics, Physics, Computer Science), or Pre-Medical with Mathematics deficiency course.",
+            "A-Levels with Mathematics and at least two other subjects with grade equivalency certificate issued by Inter Board Coordination Commission (IBCC) of at least 50%.",
+            "American High School Diploma with Mathematics equivalent to HSSC pre-requisites."
+          ],
+          "minimumPercentage": 50,
+          "testRequirements": "ITU Admissions Test (CS Stream) OR valid NTS-NAT (NAT-IE / NAT-ICS) / USAT taken within the last 12 months."
+        },
+        "feeStructure": {
+          "currency": "PKR",
+          "feePerCreditHour": 9200,
+          "admissionFeeOneTime": 25000,
+          "securityDepositRefundable": 15000,
+          "registrationFeePerSemester": 5000,
+          "typicalSemesterCreditHours": "16 to 18 credit hours",
+          "estimatedTuitionPerSemester": 156400,
+          "estimatedFirstSemesterTotal": 201400,
+          "subsequentSemesterAverage": 161400,
+          "scholarshipsAvailable": [
+            "Need-Based Financial Aid (up to 100% tuition waiver)",
+            "Merit Scholarships (Top 3 positions in cohort receive 50% - 100% tuition concession)",
+            "PEEF Scholarships & HEC Need-Based Scholarships"
+          ]
+        },
+        "meritFormula": {
+          "breakdown": {
+            "matricOrOLevels": 15,
+            "intermediateOrALevels": 35,
+            "ituEntryTestOrNAT": 50
+          },
+          "formulaText": "Aggregate Merit Score = (Matric % × 0.15) + (Intermediate Part-1 / Total % × 0.35) + (Entry Test Score % × 0.50)",
+          "example": {
+            "matricMarks": "950 / 1100 = 86.36% -> 12.95 points",
+            "interMarks": "440 / 520 (Part-1) = 84.61% -> 29.61 points",
+            "testScore": "78 / 100 = 78.00% -> 39.00 points",
+            "totalAggregate": "81.56%"
+          },
+          "previousClosingMerits": {
+            "2023": "79.4%",
+            "2024": "81.2%",
+            "2025_projected": "82.0%"
+          }
+        },
+        "curriculumOutline": [
+          {
+            "semester": 1,
+            "courses": [
+              { "code": "CS101", "title": "Programming Fundamentals (C++/Python)", "creditHours": 4 },
+              { "code": "MT101", "title": "Calculus and Analytical Geometry", "creditHours": 3 },
+              { "code": "PH101", "title": "Applied Physics", "creditHours": 3 },
+              { "code": "EN101", "title": "Functional English", "creditHours": 3 },
+              { "code": "SS101", "title": "Islamic and Pakistan Studies", "creditHours": 3 }
+            ]
+          },
+          {
+            "semester": 2,
+            "courses": [
+              { "code": "CS102", "title": "Object-Oriented Programming (OOP)", "creditHours": 4 },
+              { "code": "CS103", "title": "Discrete Structures", "creditHours": 3 },
+              { "code": "MT102", "title": "Linear Algebra & Differential Equations", "creditHours": 3 },
+              { "code": "EN102", "title": "Communication & Presentation Skills", "creditHours": 3 },
+              { "code": "SS102", "title": "Ideology & Constitution of Pakistan", "creditHours": 2 }
+            ]
+          },
+          {
+            "semester": 3,
+            "courses": [
+              { "code": "CS201", "title": "Data Structures & Algorithms (DSA)", "creditHours": 4 },
+              { "code": "CS202", "title": "Digital Logic Design (DLD)", "creditHours": 4 },
+              { "code": "MT201", "title": "Multivariable Calculus & Statistics", "creditHours": 3 },
+              { "code": "CS203", "title": "Computer Organization & Assembly", "creditHours": 3 },
+              { "code": "SS201", "title": "Professional Ethics", "creditHours": 2 }
+            ]
+          },
+          {
+            "semester": 4,
+            "courses": [
+              { "code": "CS204", "title": "Design & Analysis of Algorithms", "creditHours": 3 },
+              { "code": "CS205", "title": "Operating Systems (OS)", "creditHours": 4 },
+              { "code": "CS206", "title": "Database Management Systems (DBMS)", "creditHours": 4 },
+              { "code": "MT202", "title": "Probability & Random Variables", "creditHours": 3 },
+              { "code": "EN201", "title": "Technical Report Writing", "creditHours": 3 }
+            ]
+          },
+          {
+            "semester": 5,
+            "courses": [
+              { "code": "CS301", "title": "Software Engineering (SE)", "creditHours": 3 },
+              { "code": "CS302", "title": "Computer Networks", "creditHours": 4 },
+              { "code": "CS303", "title": "Theory of Automata & Formal Languages", "creditHours": 3 },
+              { "code": "CS304", "title": "Artificial Intelligence Fundamentals", "creditHours": 3 },
+              { "code": "CS-EL1", "title": "CS Elective I (Web Development / Mobile Dev)", "creditHours": 3 }
+            ]
+          },
+          {
+            "semester": 6,
+            "courses": [
+              { "code": "CS305", "title": "Compiler Construction", "creditHours": 3 },
+              { "code": "CS306", "title": "Information & Cyber Security", "creditHours": 3 },
+              { "code": "CS-EL2", "title": "CS Elective II (Distributed Systems / Cloud)", "creditHours": 3 },
+              { "code": "CS-EL3", "title": "CS Elective III (Data Science / DevOps)", "creditHours": 3 },
+              { "code": "MS301", "title": "Entrepreneurship & Innovation", "creditHours": 3 }
+            ]
+          },
+          {
+            "semester": 7,
+            "courses": [
+              { "code": "CS491", "title": "Final Year Project I (Cap-Stone FYP)", "creditHours": 3 },
+              { "code": "CS-EL4", "title": "CS Elective IV (Advanced Deep Learning)", "creditHours": 3 },
+              { "code": "CS-EL5", "title": "CS Elective V (High Performance Computing)", "creditHours": 3 },
+              { "code": "UE401", "title": "University Elective / Management", "creditHours": 3 }
+            ]
+          },
+          {
+            "semester": 8,
+            "courses": [
+              { "code": "CS492", "title": "Final Year Project II (Deployment & Defense)", "creditHours": 3 },
+              { "code": "CS-EL6", "title": "CS Elective VI (Quantum Computing / Blockchain)", "creditHours": 3 },
+              { "code": "SS402", "title": "Community Service / Civics", "creditHours": 1 }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "bsai",
+        "name": "Bachelor of Science in Artificial Intelligence",
+        "code": "BSAI",
+        "degreeDurationYears": 4,
+        "semesters": 8,
+        "totalCreditHours": 133,
+        "accreditation": "NCEAC Approved & Aligned with National AI Policy Framework",
+        "overview": "The BS Artificial Intelligence program at ITU specializes in neural networks, machine learning, computer vision, robotics, natural language processing (NLP), generative AI, and autonomous systems. Students have direct access to GPU computing clusters at ASTP.",
+        "eligibility": {
+          "academicQualifications": [
+            "At least 50% overall marks in Intermediate (HSSC) Pre-Engineering, ICS (Mathematics, Physics, Computer Science), or Pre-Medical with Mathematics bridge.",
+            "A-Levels with Mathematics and minimum grade equivalency of 50% issued by IBCC.",
+            "Strong quantitative and logical reasoning background."
+          ],
+          "minimumPercentage": 50,
+          "testRequirements": "ITU Admissions Test (AI & CS Stream) OR valid NTS-NAT (NAT-IE / NAT-ICS) / USAT."
+        },
+        "feeStructure": {
+          "currency": "PKR",
+          "feePerCreditHour": 9500,
+          "admissionFeeOneTime": 25000,
+          "securityDepositRefundable": 15000,
+          "registrationFeePerSemester": 5000,
+          "typicalSemesterCreditHours": "16 to 18 credit hours",
+          "estimatedTuitionPerSemester": 161500,
+          "estimatedFirstSemesterTotal": 206500,
+          "subsequentSemesterAverage": 166500,
+          "scholarshipsAvailable": [
+            "Dean's Honor Roll Scholarships",
+            "Industry Sponsored AI Fellowship Grants",
+            "HEC Need-Based Financial Assistance (20% - 100%)"
+          ]
+        },
+        "meritFormula": {
+          "breakdown": {
+            "matricOrOLevels": 15,
+            "intermediateOrALevels": 35,
+            "ituEntryTestOrNAT": 50
+          },
+          "formulaText": "Aggregate Merit Score = (Matric % × 0.15) + (Intermediate % × 0.35) + (ITU AI Entrance Test % × 0.50)",
+          "example": {
+            "matricMarks": "980 / 1100 = 89.09% -> 13.36 points",
+            "interMarks": "455 / 520 = 87.50% -> 30.62 points",
+            "testScore": "82 / 100 = 82.00% -> 41.00 points",
+            "totalAggregate": "84.98%"
+          },
+          "previousClosingMerits": {
+            "2023": "81.5%",
+            "2024": "83.8%",
+            "2025_projected": "84.5%"
+          }
+        },
+        "curriculumOutline": [
+          {
+            "semester": 1,
+            "courses": [
+              { "code": "AI101", "title": "Programming for AI (Python & C++)", "creditHours": 4 },
+              { "code": "MT101", "title": "Calculus & Analytical Geometry", "creditHours": 3 },
+              { "code": "PH101", "title": "Physics for Intelligent Systems", "creditHours": 3 },
+              { "code": "EN101", "title": "Functional English", "creditHours": 3 },
+              { "code": "SS101", "title": "Islamic and Pakistan Studies", "creditHours": 3 }
+            ]
+          },
+          {
+            "semester": 2,
+            "courses": [
+              { "code": "AI102", "title": "Object-Oriented Programming for AI", "creditHours": 4 },
+              { "code": "MT103", "title": "Linear Algebra for Machine Learning", "creditHours": 3 },
+              { "code": "AI103", "title": "Discrete Structures in AI", "creditHours": 3 },
+              { "code": "EN102", "title": "Communication Skills", "creditHours": 3 },
+              { "code": "AI104", "title": "Introduction to AI & Autonomous Systems", "creditHours": 2 }
+            ]
+          },
+          {
+            "semester": 3,
+            "courses": [
+              { "code": "CS201", "title": "Data Structures & Algorithms", "creditHours": 4 },
+              { "code": "MT203", "title": "Probability & Statistics for Data Science", "creditHours": 3 },
+              { "code": "AI201", "title": "Knowledge Representation & Reasoning", "creditHours": 3 },
+              { "code": "CS202", "title": "Digital Logic & Computer Architecture", "creditHours": 4 },
+              { "code": "SS201", "title": "Professional & AI Ethics", "creditHours": 2 }
+            ]
+          },
+          {
+            "semester": 4,
+            "courses": [
+              { "code": "AI202", "title": "Artificial Intelligence Core (Search, Logic, Games)", "creditHours": 4 },
+              { "code": "CS205", "title": "Operating Systems & Concurrency", "creditHours": 4 },
+              { "code": "CS206", "title": "Databases & Big Data Stores", "creditHours": 4 },
+              { "code": "MT204", "title": "Numerical Computing & Optimization", "creditHours": 3 }
+            ]
+          },
+          {
+            "semester": 5,
+            "courses": [
+              { "code": "AI301", "title": "Machine Learning (Supervised, Unsupervised, RL)", "creditHours": 4 },
+              { "code": "AI302", "title": "Computer Vision (CV)", "creditHours": 4 },
+              { "code": "CS301", "title": "Software Engineering for ML Systems (MLOps)", "creditHours": 3 },
+              { "code": "AI-EL1", "title": "AI Elective I (Natural Language Processing)", "creditHours": 3 }
+            ]
+          },
+          {
+            "semester": 6,
+            "courses": [
+              { "code": "AI303", "title": "Deep Learning & Neural Architectures (Transformers, LLMs)", "creditHours": 4 },
+              { "code": "AI304", "title": "Robotics & Perception", "creditHours": 3 },
+              { "code": "AI-EL2", "title": "AI Elective II (Generative AI & Diffusion Models)", "creditHours": 3 },
+              { "code": "AI-EL3", "title": "AI Elective III (Speech & Audio Processing)", "creditHours": 3 },
+              { "code": "MS301", "title": "Tech Entrepreneurship", "creditHours": 3 }
+            ]
+          },
+          {
+            "semester": 7,
+            "courses": [
+              { "code": "AI491", "title": "Final Year Project I (AI Capstone)", "creditHours": 3 },
+              { "code": "AI-EL4", "title": "AI Elective IV (Reinforcement Learning & Multi-Agent)", "creditHours": 3 },
+              { "code": "AI-EL5", "title": "AI Elective V (Edge AI & TinyML)", "creditHours": 3 },
+              { "code": "UE401", "title": "Interdisciplinary Elective", "creditHours": 3 }
+            ]
+          },
+          {
+            "semester": 8,
+            "courses": [
+              { "code": "AI492", "title": "Final Year Project II (AI Product Deployment & Paper)", "creditHours": 3 },
+              { "code": "AI-EL6", "title": "AI Elective VI (Healthcare AI / Bioinformatics)", "creditHours": 3 },
+              { "code": "SS402", "title": "Community Service", "creditHours": 1 }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "transportation": {
+    "overview": "ITU operates dedicated air-conditioned bus and coaster routes connecting all major hubs of Lahore to the Arfa Software Technology Park (ASTP) campus. Services run during morning arrivals and multiple afternoon/evening departure slots.",
+    "semesterFee": {
+      "amountPKR": 28000,
+      "billingCycle": "Per Semester (Fall / Spring)",
+      "registrationWindow": "Open during course enrollment week via ITU Student Portal (CMS)."
+    },
+    "routes": [
+      {
+        "routeNumber": "Route 1",
+        "name": "Canal & Southern Lahore Line",
+        "vehicle": "Air-Conditioned Coaster / Bus",
+        "morningDepartureTime": "07:15 AM",
+        "eveningDepartureTimes": ["04:30 PM", "06:15 PM"],
+        "stops": [
+          { "order": 1, "stopName": "Thokar Niaz Baig (Near Daewoo Terminal)", "time": "07:15 AM" },
+          { "order": 2, "stopName": "Canal View / PCSIR Society Gate", "time": "07:22 AM" },
+          { "order": 3, "stopName": "Punjab University Campus Canal Bridge", "time": "07:35 AM" },
+          { "order": 4, "stopName": "Jinnah Hospital Underpass / Doctors Hospital", "time": "07:42 AM" },
+          { "order": 5, "stopName": "Muslim Town Mor / Canal Metro Station", "time": "07:55 AM" },
+          { "order": 6, "stopName": "Ferozepur Road LOS Stop", "time": "08:05 AM" },
+          { "order": 7, "stopName": "Arfa Software Technology Park (ASTP) Campus", "time": "08:15 AM" }
+        ]
+      },
+      {
+        "routeNumber": "Route 2",
+        "name": "Northern Lahore & City Center Line",
+        "vehicle": "Air-Conditioned Bus",
+        "morningDepartureTime": "07:00 AM",
+        "eveningDepartureTimes": ["04:30 PM", "06:15 PM"],
+        "stops": [
+          { "order": 1, "stopName": "Shahdara Chowk (Main Toll Plaza)", "time": "07:00 AM" },
+          { "order": 2, "stopName": "Ravi Road / Timber Market", "time": "07:12 AM" },
+          { "order": 3, "stopName": "Bhati Gate / Minar-e-Pakistan", "time": "07:20 AM" },
+          { "order": 4, "stopName": "GCU / Katchery / Anarkali", "time": "07:32 AM" },
+          { "order": 5, "stopName": "Mall Road / Charing Cross / Governor House", "time": "07:42 AM" },
+          { "order": 6, "stopName": "Mozang Chungi / Qartaba Chowk", "time": "07:52 AM" },
+          { "order": 7, "stopName": "Ichhra Metro Bus Station", "time": "08:02 AM" },
+          { "order": 8, "stopName": "Arfa Software Technology Park (ASTP) Campus", "time": "08:15 AM" }
+        ]
+      },
+      {
+        "routeNumber": "Route 3",
+        "name": "DHA, Cantt & Ring Road Express",
+        "vehicle": "Air-Conditioned Coaster",
+        "morningDepartureTime": "07:10 AM",
+        "eveningDepartureTimes": ["04:30 PM", "06:15 PM"],
+        "stops": [
+          { "order": 1, "stopName": "DHA Phase 5 Commercial Roundabout", "time": "07:10 AM" },
+          { "order": 2, "stopName": "Lalik Jan Chowk (DHA Phase 2)", "time": "07:20 AM" },
+          { "order": 3, "stopName": "Bhatta Chowk / Bedian Road Interchange", "time": "07:28 AM" },
+          { "order": 4, "stopName": "Ghazi Road / Lahore Cantt Station", "time": "07:40 AM" },
+          { "order": 5, "stopName": "Walton Road / Packages Mall Junction", "time": "07:50 AM" },
+          { "order": 6, "stopName": "Model Town Link Road / Metro Station", "time": "08:00 AM" },
+          { "order": 7, "stopName": "Arfa Software Technology Park (ASTP) Campus", "time": "08:15 AM" }
+        ]
+      },
+      {
+        "routeNumber": "Route 4",
+        "name": "Wapda Town, Johar Town & Township Line",
+        "vehicle": "Air-Conditioned Bus",
+        "morningDepartureTime": "07:15 AM",
+        "eveningDepartureTimes": ["04:30 PM", "06:15 PM"],
+        "stops": [
+          { "order": 1, "stopName": "Wapda Town Roundabout (Main Gate)", "time": "07:15 AM" },
+          { "order": 2, "stopName": "Shaukat Khanum Memorial Hospital Chowk", "time": "07:25 AM" },
+          { "order": 3, "stopName": "Johar Town Expo Center / Emporium Mall Road", "time": "07:35 AM" },
+          { "order": 4, "stopName": "Akbar Chowk / Faisal Town", "time": "07:45 AM" },
+          { "order": 5, "stopName": "Peco Road / Kot Lakhpat", "time": "07:55 AM" },
+          { "order": 6, "stopName": "Model Town Metro Station / Arfa Tower", "time": "08:12 AM" }
+        ]
+      }
+    ],
+    "metroBusConnectivity": {
+      "stationName": "Nishtar / Model Town Metro Bus Station & Arfa Metro Station (Canal & Model Town link)",
+      "details": "The Lahore Metro Bus directly connects Arfa Software Technology Park. Students can commute affordably from Gajjumatta to Shahdara directly via the Metro Bus Network with a stop immediately outside ASTP."
+    }
+  },
+  "admissionGuidelines": {
+    "applicationProcess": [
+      "Step 1: Register on the ITU Online Admission Portal (admissions.itu.edu.pk).",
+      "Step 2: Fill in academic records (Matric/O-Level and Inter Part-1/A-Level).",
+      "Step 3: Generate and pay the application processing challan fee (PKR 2,000) at designated Bank of Punjab (BOP) or online 1Link.",
+      "Step 4: Select preferred test date for ITU Entrance Test or submit valid NTS-NAT/USAT roll number.",
+      "Step 5: Download Admit Card for the ITU Entrance Exam held at Arfa Software Technology Park.",
+      "Step 6: Check merit list announcements on the portal."
+    ],
+    "admissionsSchedule": {
+      "fallAdmissionsOpen": "June - July every year",
+      "admissionsDeadline": "Late July / Early August",
+      "entranceTestDates": "First two weeks of August",
+      "meritListAnnouncement": "Mid to Late August",
+      "classesCommence": "First week of September"
+    },
+    "documentsRequired": [
+      "Attested copy of Matric / O-Level result sheet & certificate (with IBCC equivalence).",
+      "Attested copy of Intermediate Part-1 / HSSC or A-Level result statement.",
+      "Valid CNIC or B-Form copy.",
+      "3 passport size photographs with blue or white background.",
+      "Paid Challan receipt copy."
+    ]
+  },
+  "campusLifeAndFacilities": {
+    "researchLabs": [
+      {
+        "name": "Artificial Intelligence & Machine Learning Lab",
+        "focus": "Generative modeling, speech processing for Pakistani languages, healthcare diagnostics."
+      },
+      {
+        "name": "Center for Speech and Language Technologies (CSaLT)",
+        "focus": "Urdu NLP, speech synthesis, and local dialect machine translation."
+      },
+      {
+        "name": "Computer Vision & Autonomous Systems Lab",
+        "focus": "Autonomous drone navigation, surveillance AI, and medical imaging."
+      },
+      {
+        "name": "National Center of Cyber Security (NCCS) ITU Chapter",
+        "focus": "Penetration testing, cryptographic verification, and digital forensics."
+      }
+    ],
+    "studentSocieties": [
+      "ACM ITU Student Chapter (Competitive Programming, Hackathons, Tech Talks)",
+      "ITU Robotics Society (Rover competitions, National Robotics challenges)",
+      "ITU Debating Society (Parliamentary debates, MUNs)",
+      "ITU Sports Society (Futsal, Cricket, Table Tennis, Badminton tournaments)",
+      "Music & Arts Society (Cultural nights, creative arts exhibitions)"
+    ],
+    "library": {
+      "location": "ASTP 6th Floor",
+      "resources": "Over 20,000 physical volumes, subscriptions to IEEE Xplore, ACM Digital Library, SpringerLink, and ScienceDirect, plus quiet study pods."
+    },
+    "incubationAndIndustry": {
+      "plan9": "Direct access to Plan9 (Punjab's largest tech incubator) located within Arfa Software Technology Park.",
+      "industryInternships": "Over 90% of graduates placed in top tier IT firms (Systems Limited, Arbisoft, Netsol, Devsinc, VentureDive, Dubizzle/EMPG, Careem, and global tech firms)."
+    }
+  },
+  "frequentlyAskedQuestions": [
+    {
+      "question": "What is the fee per credit hour for BSCS and BSAI at ITU?",
+      "answer": "For BS Computer Science (BSCS), the tuition fee is PKR 9,200 per credit hour. For BS Artificial Intelligence (BSAI), it is PKR 9,500 per credit hour. A typical semester comprises 16-18 credit hours, making the semester tuition around PKR 156,400 - 166,500 plus semester registration fees."
+    },
+    {
+      "question": "What is the merit formula for undergraduate admissions at ITU?",
+      "answer": "ITU calculates aggregate merit using: Matric / O-Levels (15%) + Intermediate / A-Levels (35%) + ITU Entrance Test or NTS-NAT (50%). Aggregate = (Matric% * 0.15) + (Inter% * 0.35) + (Test% * 0.50)."
+    },
+    {
+      "question": "Does ITU offer transport / bus service for students in Lahore?",
+      "answer": "Yes! ITU operates 4 comprehensive bus and coaster routes covering Thokar / Canal Road, Shahdara / Mall Road, DHA / Cantt / Walton, and Wapda Town / Johar Town / Township. The transport fee is PKR 28,000 per semester. Additionally, the Lahore Metro Bus stops right in front of Arfa Software Technology Park."
+    },
+    {
+      "question": "Can Pre-Medical students apply for BS Computer Science or BS AI at ITU?",
+      "answer": "Yes, per HEC revised guidelines, Pre-Medical students who have achieved at least 50% marks in F.Sc Pre-Medical can apply, provided they pass a 6-credit deficiency mathematics course in their first year of study."
+    },
+    {
+      "question": "Is ITU recognized by HEC and NCEAC?",
+      "answer": "Yes, Information Technology University (ITU) is chartered by the Punjab Government, fully recognized by HEC, and its computing degrees (BSCS and BSAI) carry the highest accreditation tier from the National Computing Education Accreditation Council (NCEAC)."
+    }
+  ]
+}

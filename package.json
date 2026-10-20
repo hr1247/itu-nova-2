@@ -1,0 +1,20 @@
+{
+  "name": "itu-nova",
+  "version": "1.0.0",
+  "description": "Full-stack Dual-Purpose AI Assistant for Information Technology University (ITU), Lahore",
+  "private": true,
+  "scripts": {
+    "install:all": "npm install && npm install --prefix server && npm install --prefix client",
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "npm --prefix server run dev",
+    "dev:client": "npm --prefix client run dev",
+    "start": "node server/src/index.js",
+    "build": "npm --prefix client run build"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "dependencies": {
+    "axios": "^1.20.0"
+  }
+}

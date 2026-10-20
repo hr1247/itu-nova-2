@@ -1,0 +1,39 @@
+## Dependencies
+node_modules/
+**/node_modules/
+
+## Environment variables and secrets
+.env
+.env.*
+!.env.example
+!**/.env.example
+
+## Build output and tool caches
+dist/
+**/dist/
+coverage/
+.vite/
+**/.vite/
+.cache/
+*.tsbuildinfo
+
+## Logs and temporary files
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+*.tmp
+*.temp
+
+## Local generated conversation memory
+src/data/learned_memory.json
+
+## Operating system and editor files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
