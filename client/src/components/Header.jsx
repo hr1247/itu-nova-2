@@ -1,7 +1,7 @@
 import React from 'react';
-import { GraduationCap, Bus, BookOpen, Trash2, Cpu, Globe, MessageSquare } from 'lucide-react';
+import { GraduationCap, Bus, BookOpen, Cpu, Globe, MessageSquare, Plus, History } from 'lucide-react';
 
-export default function Header({ mode, setMode, onOpenKnowledge, onOpenTransport, onClearChat, serverStatus, hasMessages }) {
+export default function Header({ mode, setMode, onOpenKnowledge, onOpenTransport, onNewChat, onOpenHistory, serverStatus, conversationCount }) {
   return (
     <header className="sticky top-0 z-30 bg-slate-900/95 backdrop-blur-xl border-b border-slate-800 px-4 sm:px-6 py-3">
       <div className="max-w-4xl mx-auto flex items-center justify-between gap-3">
@@ -60,6 +60,24 @@ export default function Header({ mode, setMode, onOpenKnowledge, onOpenTransport
         {/* Right: Quick Actions */}
         <div className="flex items-center gap-1.5">
           <button
+            onClick={onOpenHistory}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 text-[11px] font-medium rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition-all"
+            title="Open previous chats"
+          >
+            <History className="w-3.5 h-3.5 text-blue-400" />
+            <span className="hidden lg:inline">History{conversationCount ? ` (${conversationCount})` : ''}</span>
+          </button>
+
+          <button
+            onClick={onNewChat}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 text-[11px] font-medium rounded-lg bg-blue-600 hover:bg-blue-500 text-white transition-all"
+            title="Start a new chat"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">New chat</span>
+          </button>
+
+          <button
             onClick={onOpenKnowledge}
             className="flex items-center gap-1.5 px-2.5 py-1.5 text-[11px] font-medium rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition-all"
             title="View ITU programs, fees & merit"
@@ -77,15 +95,6 @@ export default function Header({ mode, setMode, onOpenKnowledge, onOpenTransport
             <span className="hidden md:inline">Bus Routes</span>
           </button>
 
-          {hasMessages && (
-            <button
-              onClick={onClearChat}
-              className="p-1.5 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 border border-transparent hover:border-rose-500/20 transition-all"
-              title="Clear chat"
-            >
-              <Trash2 className="w-3.5 h-3.5" />
-            </button>
-          )}
         </div>
 
       </div>

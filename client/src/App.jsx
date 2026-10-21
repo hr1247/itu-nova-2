@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import MessageList from './components/MessageList';
 import ChatInput from './components/ChatInput';
+import ConversationHistoryModal from './components/ConversationHistoryModal';
 import KnowledgeExplorerModal from './components/KnowledgeExplorerModal';
 import TransportModal from './components/TransportModal';
 import { sendChatMessage, checkServerHealth } from './services/api';
@@ -31,32 +32,70 @@ I can help you with two types of questions:
   timestamp: new Date().toISOString()
 };
 
-export default function App() {
-  const [messages, setMessages] = useState(() => {
-    try {
-      const saved = localStorage.getItem('itu_chatbot_messages');
-      return saved ? JSON.parse(saved) : [INITIAL_GREETING];
-    } catch {
-      return [INITIAL_GREETING];
-    }
-  });
+const CONVERSATIONS_STORAGE_KEY = 'itu_chatbot_conversations';
+const LEGACY_MESSAGES_STORAGE_KEY = 'itu_chatbot_messages';
 
+function loadConversations() {
+  try {
+    const savedConversations = localStorage.getItem(CONVERSATIONS_STORAGE_KEY);
+    if (savedConversations) {
+      const parsed = JSON.parse(savedConversations);
+      return Array.isArray(parsed) ? parsed : [];
+    }
+
+    const legacyMessages = JSON.parse(localStorage.getItem(LEGACY_MESSAGES_STORAGE_KEY) || '[]');
+    if (!Array.isArray(legacyMessages) || legacyMessages.length <= 1) return [];
+
+    const firstUserMessage = legacyMessages.find(message => message.role === 'user');
+    return [{
+      id: `chat-${Date.now()}`,
+      title: firstUserMessage?.content || 'Previous conversation',
+      messages: legacyMessages,
+      updatedAt: legacyMessages.at(-1)?.timestamp || new Date().toISOString()
+    }];
+  } catch {
+    return [];
+  }
+}
+
+export default function App() {
+  const [conversations, setConversations] = useState(loadConversations);
+  const [activeConversationId, setActiveConversationId] = useState(null);
+  const [messages, setMessages] = useState([INITIAL_GREETING]);
   const [loading, setLoading] = useState(false);
   const [mode, setMode] = useState('auto'); // 'auto' | 'itu' | 'general'
   const [isKnowledgeModalOpen, setIsKnowledgeModalOpen] = useState(false);
   const [isTransportModalOpen, setIsTransportModalOpen] = useState(false);
+  const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
   const [serverStatus, setServerStatus] = useState({ online: true });
 
-  // Save conversation to localStorage
   useEffect(() => {
     try {
-      localStorage.setItem('itu_chatbot_messages', JSON.stringify(messages));
+      localStorage.setItem(CONVERSATIONS_STORAGE_KEY, JSON.stringify(conversations));
     } catch (e) {
-      console.warn('Could not persist messages to localStorage', e);
+      console.warn('Could not persist conversations to localStorage', e);
     }
-  }, [messages]);
+  }, [conversations]);
 
-  // Check backend server health
+  useEffect(() => {
+    if (!activeConversationId || messages.length <= 1) return;
+
+    const firstUserMessage = messages.find(message => message.role === 'user');
+    const updatedAt = messages.at(-1)?.timestamp || new Date().toISOString();
+    setConversations(previous => {
+      const existing = previous.find(conversation => conversation.id === activeConversationId);
+      const conversation = {
+        id: activeConversationId,
+        title: firstUserMessage?.content || 'Conversation',
+        messages,
+        updatedAt
+      };
+      return existing
+        ? previous.map(item => item.id === activeConversationId ? conversation : item)
+        : [conversation, ...previous];
+    });
+  }, [activeConversationId, messages]);
+
   useEffect(() => {
     const checkHealth = async () => {
       const status = await checkServerHealth();
@@ -79,6 +118,9 @@ export default function App() {
 
     const updatedMessages = [...messages, userMessage];
     setMessages(updatedMessages);
+    if (!activeConversationId) {
+      setActiveConversationId(`chat-${Date.now()}`);
+    }
     setLoading(true);
 
     try {
@@ -121,10 +163,23 @@ export default function App() {
     }
   };
 
-  const handleClearChat = () => {
-    if (window.confirm('Are you sure you want to clear your current conversation?')) {
+  const handleNewChat = () => {
+    setActiveConversationId(null);
+    setMessages([INITIAL_GREETING]);
+    setIsHistoryModalOpen(false);
+  };
+
+  const handleOpenConversation = (conversation) => {
+    setActiveConversationId(conversation.id);
+    setMessages(conversation.messages);
+    setIsHistoryModalOpen(false);
+  };
+
+  const handleDeleteConversation = (conversationId) => {
+    setConversations(previous => previous.filter(conversation => conversation.id !== conversationId));
+    if (activeConversationId === conversationId) {
+      setActiveConversationId(null);
       setMessages([INITIAL_GREETING]);
-      localStorage.removeItem('itu_chatbot_messages');
     }
   };
 
@@ -136,9 +191,11 @@ export default function App() {
         setMode={setMode}
         onOpenKnowledge={() => setIsKnowledgeModalOpen(true)}
         onOpenTransport={() => setIsTransportModalOpen(true)}
-        onClearChat={handleClearChat}
+        onNewChat={handleNewChat}
+        onOpenHistory={() => setIsHistoryModalOpen(true)}
         serverStatus={serverStatus}
         hasMessages={messages.length > 1}
+        conversationCount={conversations.length}
       />
 
       {/* Main Chat Stream */}
@@ -167,6 +224,15 @@ export default function App() {
       <TransportModal
         isOpen={isTransportModalOpen}
         onClose={() => setIsTransportModalOpen(false)}
+      />
+
+      <ConversationHistoryModal
+        isOpen={isHistoryModalOpen}
+        conversations={conversations}
+        activeConversationId={activeConversationId}
+        onClose={() => setIsHistoryModalOpen(false)}
+        onOpenConversation={handleOpenConversation}
+        onDeleteConversation={handleDeleteConversation}
       />
     </div>
   );
