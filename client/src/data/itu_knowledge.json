@@ -85,80 +85,233 @@
           {
             "semester": 1,
             "courses": [
-              { "code": "CS101", "title": "Programming Fundamentals (C++/Python)", "creditHours": 4 },
-              { "code": "MT101", "title": "Calculus and Analytical Geometry", "creditHours": 3 },
-              { "code": "PH101", "title": "Applied Physics", "creditHours": 3 },
-              { "code": "EN101", "title": "Functional English", "creditHours": 3 },
-              { "code": "SS101", "title": "Islamic and Pakistan Studies", "creditHours": 3 }
+              {
+                "code": "CS101",
+                "title": "Programming Fundamentals (C++/Python)",
+                "creditHours": 4
+              },
+              {
+                "code": "MT101",
+                "title": "Calculus and Analytical Geometry",
+                "creditHours": 3
+              },
+              {
+                "code": "PH101",
+                "title": "Applied Physics",
+                "creditHours": 3
+              },
+              {
+                "code": "EN101",
+                "title": "Functional English",
+                "creditHours": 3
+              },
+              {
+                "code": "SS101",
+                "title": "Islamic and Pakistan Studies",
+                "creditHours": 3
+              }
             ]
           },
           {
             "semester": 2,
             "courses": [
-              { "code": "CS102", "title": "Object-Oriented Programming (OOP)", "creditHours": 4 },
-              { "code": "CS103", "title": "Discrete Structures", "creditHours": 3 },
-              { "code": "MT102", "title": "Linear Algebra & Differential Equations", "creditHours": 3 },
-              { "code": "EN102", "title": "Communication & Presentation Skills", "creditHours": 3 },
-              { "code": "SS102", "title": "Ideology & Constitution of Pakistan", "creditHours": 2 }
+              {
+                "code": "CS102",
+                "title": "Object-Oriented Programming (OOP)",
+                "creditHours": 4
+              },
+              {
+                "code": "CS103",
+                "title": "Discrete Structures",
+                "creditHours": 3
+              },
+              {
+                "code": "MT102",
+                "title": "Linear Algebra & Differential Equations",
+                "creditHours": 3
+              },
+              {
+                "code": "EN102",
+                "title": "Communication & Presentation Skills",
+                "creditHours": 3
+              },
+              {
+                "code": "SS102",
+                "title": "Ideology & Constitution of Pakistan",
+                "creditHours": 2
+              }
             ]
           },
           {
             "semester": 3,
             "courses": [
-              { "code": "CS201", "title": "Data Structures & Algorithms (DSA)", "creditHours": 4 },
-              { "code": "CS202", "title": "Digital Logic Design (DLD)", "creditHours": 4 },
-              { "code": "MT201", "title": "Multivariable Calculus & Statistics", "creditHours": 3 },
-              { "code": "CS203", "title": "Computer Organization & Assembly", "creditHours": 3 },
-              { "code": "SS201", "title": "Professional Ethics", "creditHours": 2 }
+              {
+                "code": "CS201",
+                "title": "Data Structures & Algorithms (DSA)",
+                "creditHours": 4
+              },
+              {
+                "code": "CS202",
+                "title": "Digital Logic Design (DLD)",
+                "creditHours": 4
+              },
+              {
+                "code": "MT201",
+                "title": "Multivariable Calculus & Statistics",
+                "creditHours": 3
+              },
+              {
+                "code": "CS203",
+                "title": "Computer Organization & Assembly",
+                "creditHours": 3
+              },
+              {
+                "code": "SS201",
+                "title": "Professional Ethics",
+                "creditHours": 2
+              }
             ]
           },
           {
             "semester": 4,
             "courses": [
-              { "code": "CS204", "title": "Design & Analysis of Algorithms", "creditHours": 3 },
-              { "code": "CS205", "title": "Operating Systems (OS)", "creditHours": 4 },
-              { "code": "CS206", "title": "Database Management Systems (DBMS)", "creditHours": 4 },
-              { "code": "MT202", "title": "Probability & Random Variables", "creditHours": 3 },
-              { "code": "EN201", "title": "Technical Report Writing", "creditHours": 3 }
+              {
+                "code": "CS204",
+                "title": "Design & Analysis of Algorithms",
+                "creditHours": 3
+              },
+              {
+                "code": "CS205",
+                "title": "Operating Systems (OS)",
+                "creditHours": 4
+              },
+              {
+                "code": "CS206",
+                "title": "Database Management Systems (DBMS)",
+                "creditHours": 4
+              },
+              {
+                "code": "MT202",
+                "title": "Probability & Random Variables",
+                "creditHours": 3
+              },
+              {
+                "code": "EN201",
+                "title": "Technical Report Writing",
+                "creditHours": 3
+              }
             ]
           },
           {
             "semester": 5,
             "courses": [
-              { "code": "CS301", "title": "Software Engineering (SE)", "creditHours": 3 },
-              { "code": "CS302", "title": "Computer Networks", "creditHours": 4 },
-              { "code": "CS303", "title": "Theory of Automata & Formal Languages", "creditHours": 3 },
-              { "code": "CS304", "title": "Artificial Intelligence Fundamentals", "creditHours": 3 },
-              { "code": "CS-EL1", "title": "CS Elective I (Web Development / Mobile Dev)", "creditHours": 3 }
+              {
+                "code": "CS301",
+                "title": "Software Engineering (SE)",
+                "creditHours": 3
+              },
+              {
+                "code": "CS302",
+                "title": "Computer Networks",
+                "creditHours": 4
+              },
+              {
+                "code": "CS303",
+                "title": "Theory of Automata & Formal Languages",
+                "creditHours": 3
+              },
+              {
+                "code": "CS304",
+                "title": "Artificial Intelligence Fundamentals",
+                "creditHours": 3
+              },
+              {
+                "code": "CS-EL1",
+                "title": "CS Elective I (Web Development / Mobile Dev)",
+                "creditHours": 3
+              }
             ]
           },
           {
             "semester": 6,
             "courses": [
-              { "code": "CS305", "title": "Compiler Construction", "creditHours": 3 },
-              { "code": "CS306", "title": "Information & Cyber Security", "creditHours": 3 },
-              { "code": "CS-EL2", "title": "CS Elective II (Distributed Systems / Cloud)", "creditHours": 3 },
-              { "code": "CS-EL3", "title": "CS Elective III (Data Science / DevOps)", "creditHours": 3 },
-              { "code": "MS301", "title": "Entrepreneurship & Innovation", "creditHours": 3 }
+              {
+                "code": "CS305",
+                "title": "Compiler Construction",
+                "creditHours": 3
+              },
+              {
+                "code": "CS306",
+                "title": "Information & Cyber Security",
+                "creditHours": 3
+              },
+              {
+                "code": "CS-EL2",
+                "title": "CS Elective II (Distributed Systems / Cloud)",
+                "creditHours": 3
+              },
+              {
+                "code": "CS-EL3",
+                "title": "CS Elective III (Data Science / DevOps)",
+                "creditHours": 3
+              },
+              {
+                "code": "MS301",
+                "title": "Entrepreneurship & Innovation",
+                "creditHours": 3
+              }
             ]
           },
           {
             "semester": 7,
             "courses": [
-              { "code": "CS491", "title": "Final Year Project I (Cap-Stone FYP)", "creditHours": 3 },
-              { "code": "CS-EL4", "title": "CS Elective IV (Advanced Deep Learning)", "creditHours": 3 },
-              { "code": "CS-EL5", "title": "CS Elective V (High Performance Computing)", "creditHours": 3 },
-              { "code": "UE401", "title": "University Elective / Management", "creditHours": 3 }
+              {
+                "code": "CS491",
+                "title": "Final Year Project I (Cap-Stone FYP)",
+                "creditHours": 3
+              },
+              {
+                "code": "CS-EL4",
+                "title": "CS Elective IV (Advanced Deep Learning)",
+                "creditHours": 3
+              },
+              {
+                "code": "CS-EL5",
+                "title": "CS Elective V (High Performance Computing)",
+                "creditHours": 3
+              },
+              {
+                "code": "UE401",
+                "title": "University Elective / Management",
+                "creditHours": 3
+              }
             ]
           },
           {
             "semester": 8,
             "courses": [
-              { "code": "CS492", "title": "Final Year Project II (Deployment & Defense)", "creditHours": 3 },
-              { "code": "CS-EL6", "title": "CS Elective VI (Quantum Computing / Blockchain)", "creditHours": 3 },
-              { "code": "SS402", "title": "Community Service / Civics", "creditHours": 1 }
+              {
+                "code": "CS492",
+                "title": "Final Year Project II (Deployment & Defense)",
+                "creditHours": 3
+              },
+              {
+                "code": "CS-EL6",
+                "title": "CS Elective VI (Quantum Computing / Blockchain)",
+                "creditHours": 3
+              },
+              {
+                "code": "SS402",
+                "title": "Community Service / Civics",
+                "creditHours": 1
+              }
             ]
           }
+        ],
+        "keywords": [
+          "admission into bscs",
+          "can i get admission in bscs",
+          "bscs eligibility"
         ]
       },
       {
@@ -218,78 +371,223 @@
           {
             "semester": 1,
             "courses": [
-              { "code": "AI101", "title": "Programming for AI (Python & C++)", "creditHours": 4 },
-              { "code": "MT101", "title": "Calculus & Analytical Geometry", "creditHours": 3 },
-              { "code": "PH101", "title": "Physics for Intelligent Systems", "creditHours": 3 },
-              { "code": "EN101", "title": "Functional English", "creditHours": 3 },
-              { "code": "SS101", "title": "Islamic and Pakistan Studies", "creditHours": 3 }
+              {
+                "code": "AI101",
+                "title": "Programming for AI (Python & C++)",
+                "creditHours": 4
+              },
+              {
+                "code": "MT101",
+                "title": "Calculus & Analytical Geometry",
+                "creditHours": 3
+              },
+              {
+                "code": "PH101",
+                "title": "Physics for Intelligent Systems",
+                "creditHours": 3
+              },
+              {
+                "code": "EN101",
+                "title": "Functional English",
+                "creditHours": 3
+              },
+              {
+                "code": "SS101",
+                "title": "Islamic and Pakistan Studies",
+                "creditHours": 3
+              }
             ]
           },
           {
             "semester": 2,
             "courses": [
-              { "code": "AI102", "title": "Object-Oriented Programming for AI", "creditHours": 4 },
-              { "code": "MT103", "title": "Linear Algebra for Machine Learning", "creditHours": 3 },
-              { "code": "AI103", "title": "Discrete Structures in AI", "creditHours": 3 },
-              { "code": "EN102", "title": "Communication Skills", "creditHours": 3 },
-              { "code": "AI104", "title": "Introduction to AI & Autonomous Systems", "creditHours": 2 }
+              {
+                "code": "AI102",
+                "title": "Object-Oriented Programming for AI",
+                "creditHours": 4
+              },
+              {
+                "code": "MT103",
+                "title": "Linear Algebra for Machine Learning",
+                "creditHours": 3
+              },
+              {
+                "code": "AI103",
+                "title": "Discrete Structures in AI",
+                "creditHours": 3
+              },
+              {
+                "code": "EN102",
+                "title": "Communication Skills",
+                "creditHours": 3
+              },
+              {
+                "code": "AI104",
+                "title": "Introduction to AI & Autonomous Systems",
+                "creditHours": 2
+              }
             ]
           },
           {
             "semester": 3,
             "courses": [
-              { "code": "CS201", "title": "Data Structures & Algorithms", "creditHours": 4 },
-              { "code": "MT203", "title": "Probability & Statistics for Data Science", "creditHours": 3 },
-              { "code": "AI201", "title": "Knowledge Representation & Reasoning", "creditHours": 3 },
-              { "code": "CS202", "title": "Digital Logic & Computer Architecture", "creditHours": 4 },
-              { "code": "SS201", "title": "Professional & AI Ethics", "creditHours": 2 }
+              {
+                "code": "CS201",
+                "title": "Data Structures & Algorithms",
+                "creditHours": 4
+              },
+              {
+                "code": "MT203",
+                "title": "Probability & Statistics for Data Science",
+                "creditHours": 3
+              },
+              {
+                "code": "AI201",
+                "title": "Knowledge Representation & Reasoning",
+                "creditHours": 3
+              },
+              {
+                "code": "CS202",
+                "title": "Digital Logic & Computer Architecture",
+                "creditHours": 4
+              },
+              {
+                "code": "SS201",
+                "title": "Professional & AI Ethics",
+                "creditHours": 2
+              }
             ]
           },
           {
             "semester": 4,
             "courses": [
-              { "code": "AI202", "title": "Artificial Intelligence Core (Search, Logic, Games)", "creditHours": 4 },
-              { "code": "CS205", "title": "Operating Systems & Concurrency", "creditHours": 4 },
-              { "code": "CS206", "title": "Databases & Big Data Stores", "creditHours": 4 },
-              { "code": "MT204", "title": "Numerical Computing & Optimization", "creditHours": 3 }
+              {
+                "code": "AI202",
+                "title": "Artificial Intelligence Core (Search, Logic, Games)",
+                "creditHours": 4
+              },
+              {
+                "code": "CS205",
+                "title": "Operating Systems & Concurrency",
+                "creditHours": 4
+              },
+              {
+                "code": "CS206",
+                "title": "Databases & Big Data Stores",
+                "creditHours": 4
+              },
+              {
+                "code": "MT204",
+                "title": "Numerical Computing & Optimization",
+                "creditHours": 3
+              }
             ]
           },
           {
             "semester": 5,
             "courses": [
-              { "code": "AI301", "title": "Machine Learning (Supervised, Unsupervised, RL)", "creditHours": 4 },
-              { "code": "AI302", "title": "Computer Vision (CV)", "creditHours": 4 },
-              { "code": "CS301", "title": "Software Engineering for ML Systems (MLOps)", "creditHours": 3 },
-              { "code": "AI-EL1", "title": "AI Elective I (Natural Language Processing)", "creditHours": 3 }
+              {
+                "code": "AI301",
+                "title": "Machine Learning (Supervised, Unsupervised, RL)",
+                "creditHours": 4
+              },
+              {
+                "code": "AI302",
+                "title": "Computer Vision (CV)",
+                "creditHours": 4
+              },
+              {
+                "code": "CS301",
+                "title": "Software Engineering for ML Systems (MLOps)",
+                "creditHours": 3
+              },
+              {
+                "code": "AI-EL1",
+                "title": "AI Elective I (Natural Language Processing)",
+                "creditHours": 3
+              }
             ]
           },
           {
             "semester": 6,
             "courses": [
-              { "code": "AI303", "title": "Deep Learning & Neural Architectures (Transformers, LLMs)", "creditHours": 4 },
-              { "code": "AI304", "title": "Robotics & Perception", "creditHours": 3 },
-              { "code": "AI-EL2", "title": "AI Elective II (Generative AI & Diffusion Models)", "creditHours": 3 },
-              { "code": "AI-EL3", "title": "AI Elective III (Speech & Audio Processing)", "creditHours": 3 },
-              { "code": "MS301", "title": "Tech Entrepreneurship", "creditHours": 3 }
+              {
+                "code": "AI303",
+                "title": "Deep Learning & Neural Architectures (Transformers, LLMs)",
+                "creditHours": 4
+              },
+              {
+                "code": "AI304",
+                "title": "Robotics & Perception",
+                "creditHours": 3
+              },
+              {
+                "code": "AI-EL2",
+                "title": "AI Elective II (Generative AI & Diffusion Models)",
+                "creditHours": 3
+              },
+              {
+                "code": "AI-EL3",
+                "title": "AI Elective III (Speech & Audio Processing)",
+                "creditHours": 3
+              },
+              {
+                "code": "MS301",
+                "title": "Tech Entrepreneurship",
+                "creditHours": 3
+              }
             ]
           },
           {
             "semester": 7,
             "courses": [
-              { "code": "AI491", "title": "Final Year Project I (AI Capstone)", "creditHours": 3 },
-              { "code": "AI-EL4", "title": "AI Elective IV (Reinforcement Learning & Multi-Agent)", "creditHours": 3 },
-              { "code": "AI-EL5", "title": "AI Elective V (Edge AI & TinyML)", "creditHours": 3 },
-              { "code": "UE401", "title": "Interdisciplinary Elective", "creditHours": 3 }
+              {
+                "code": "AI491",
+                "title": "Final Year Project I (AI Capstone)",
+                "creditHours": 3
+              },
+              {
+                "code": "AI-EL4",
+                "title": "AI Elective IV (Reinforcement Learning & Multi-Agent)",
+                "creditHours": 3
+              },
+              {
+                "code": "AI-EL5",
+                "title": "AI Elective V (Edge AI & TinyML)",
+                "creditHours": 3
+              },
+              {
+                "code": "UE401",
+                "title": "Interdisciplinary Elective",
+                "creditHours": 3
+              }
             ]
           },
           {
             "semester": 8,
             "courses": [
-              { "code": "AI492", "title": "Final Year Project II (AI Product Deployment & Paper)", "creditHours": 3 },
-              { "code": "AI-EL6", "title": "AI Elective VI (Healthcare AI / Bioinformatics)", "creditHours": 3 },
-              { "code": "SS402", "title": "Community Service", "creditHours": 1 }
+              {
+                "code": "AI492",
+                "title": "Final Year Project II (AI Product Deployment & Paper)",
+                "creditHours": 3
+              },
+              {
+                "code": "AI-EL6",
+                "title": "AI Elective VI (Healthcare AI / Bioinformatics)",
+                "creditHours": 3
+              },
+              {
+                "code": "SS402",
+                "title": "Community Service",
+                "creditHours": 1
+              }
             ]
           }
+        ],
+        "keywords": [
+          "admission into bsai",
+          "can i get admission in bsai",
+          "bsai eligibility"
         ]
       }
     ]
@@ -307,15 +605,46 @@
         "name": "Canal & Southern Lahore Line",
         "vehicle": "Air-Conditioned Coaster / Bus",
         "morningDepartureTime": "07:15 AM",
-        "eveningDepartureTimes": ["04:30 PM", "06:15 PM"],
+        "eveningDepartureTimes": [
+          "04:30 PM",
+          "06:15 PM"
+        ],
         "stops": [
-          { "order": 1, "stopName": "Thokar Niaz Baig (Near Daewoo Terminal)", "time": "07:15 AM" },
-          { "order": 2, "stopName": "Canal View / PCSIR Society Gate", "time": "07:22 AM" },
-          { "order": 3, "stopName": "Punjab University Campus Canal Bridge", "time": "07:35 AM" },
-          { "order": 4, "stopName": "Jinnah Hospital Underpass / Doctors Hospital", "time": "07:42 AM" },
-          { "order": 5, "stopName": "Muslim Town Mor / Canal Metro Station", "time": "07:55 AM" },
-          { "order": 6, "stopName": "Ferozepur Road LOS Stop", "time": "08:05 AM" },
-          { "order": 7, "stopName": "Arfa Software Technology Park (ASTP) Campus", "time": "08:15 AM" }
+          {
+            "order": 1,
+            "stopName": "Thokar Niaz Baig (Near Daewoo Terminal)",
+            "time": "07:15 AM"
+          },
+          {
+            "order": 2,
+            "stopName": "Canal View / PCSIR Society Gate",
+            "time": "07:22 AM"
+          },
+          {
+            "order": 3,
+            "stopName": "Punjab University Campus Canal Bridge",
+            "time": "07:35 AM"
+          },
+          {
+            "order": 4,
+            "stopName": "Jinnah Hospital Underpass / Doctors Hospital",
+            "time": "07:42 AM"
+          },
+          {
+            "order": 5,
+            "stopName": "Muslim Town Mor / Canal Metro Station",
+            "time": "07:55 AM"
+          },
+          {
+            "order": 6,
+            "stopName": "Ferozepur Road LOS Stop",
+            "time": "08:05 AM"
+          },
+          {
+            "order": 7,
+            "stopName": "Arfa Software Technology Park (ASTP) Campus",
+            "time": "08:15 AM"
+          }
         ]
       },
       {
@@ -323,16 +652,51 @@
         "name": "Northern Lahore & City Center Line",
         "vehicle": "Air-Conditioned Bus",
         "morningDepartureTime": "07:00 AM",
-        "eveningDepartureTimes": ["04:30 PM", "06:15 PM"],
+        "eveningDepartureTimes": [
+          "04:30 PM",
+          "06:15 PM"
+        ],
         "stops": [
-          { "order": 1, "stopName": "Shahdara Chowk (Main Toll Plaza)", "time": "07:00 AM" },
-          { "order": 2, "stopName": "Ravi Road / Timber Market", "time": "07:12 AM" },
-          { "order": 3, "stopName": "Bhati Gate / Minar-e-Pakistan", "time": "07:20 AM" },
-          { "order": 4, "stopName": "GCU / Katchery / Anarkali", "time": "07:32 AM" },
-          { "order": 5, "stopName": "Mall Road / Charing Cross / Governor House", "time": "07:42 AM" },
-          { "order": 6, "stopName": "Mozang Chungi / Qartaba Chowk", "time": "07:52 AM" },
-          { "order": 7, "stopName": "Ichhra Metro Bus Station", "time": "08:02 AM" },
-          { "order": 8, "stopName": "Arfa Software Technology Park (ASTP) Campus", "time": "08:15 AM" }
+          {
+            "order": 1,
+            "stopName": "Shahdara Chowk (Main Toll Plaza)",
+            "time": "07:00 AM"
+          },
+          {
+            "order": 2,
+            "stopName": "Ravi Road / Timber Market",
+            "time": "07:12 AM"
+          },
+          {
+            "order": 3,
+            "stopName": "Bhati Gate / Minar-e-Pakistan",
+            "time": "07:20 AM"
+          },
+          {
+            "order": 4,
+            "stopName": "GCU / Katchery / Anarkali",
+            "time": "07:32 AM"
+          },
+          {
+            "order": 5,
+            "stopName": "Mall Road / Charing Cross / Governor House",
+            "time": "07:42 AM"
+          },
+          {
+            "order": 6,
+            "stopName": "Mozang Chungi / Qartaba Chowk",
+            "time": "07:52 AM"
+          },
+          {
+            "order": 7,
+            "stopName": "Ichhra Metro Bus Station",
+            "time": "08:02 AM"
+          },
+          {
+            "order": 8,
+            "stopName": "Arfa Software Technology Park (ASTP) Campus",
+            "time": "08:15 AM"
+          }
         ]
       },
       {
@@ -340,15 +704,46 @@
         "name": "DHA, Cantt & Ring Road Express",
         "vehicle": "Air-Conditioned Coaster",
         "morningDepartureTime": "07:10 AM",
-        "eveningDepartureTimes": ["04:30 PM", "06:15 PM"],
+        "eveningDepartureTimes": [
+          "04:30 PM",
+          "06:15 PM"
+        ],
         "stops": [
-          { "order": 1, "stopName": "DHA Phase 5 Commercial Roundabout", "time": "07:10 AM" },
-          { "order": 2, "stopName": "Lalik Jan Chowk (DHA Phase 2)", "time": "07:20 AM" },
-          { "order": 3, "stopName": "Bhatta Chowk / Bedian Road Interchange", "time": "07:28 AM" },
-          { "order": 4, "stopName": "Ghazi Road / Lahore Cantt Station", "time": "07:40 AM" },
-          { "order": 5, "stopName": "Walton Road / Packages Mall Junction", "time": "07:50 AM" },
-          { "order": 6, "stopName": "Model Town Link Road / Metro Station", "time": "08:00 AM" },
-          { "order": 7, "stopName": "Arfa Software Technology Park (ASTP) Campus", "time": "08:15 AM" }
+          {
+            "order": 1,
+            "stopName": "DHA Phase 5 Commercial Roundabout",
+            "time": "07:10 AM"
+          },
+          {
+            "order": 2,
+            "stopName": "Lalik Jan Chowk (DHA Phase 2)",
+            "time": "07:20 AM"
+          },
+          {
+            "order": 3,
+            "stopName": "Bhatta Chowk / Bedian Road Interchange",
+            "time": "07:28 AM"
+          },
+          {
+            "order": 4,
+            "stopName": "Ghazi Road / Lahore Cantt Station",
+            "time": "07:40 AM"
+          },
+          {
+            "order": 5,
+            "stopName": "Walton Road / Packages Mall Junction",
+            "time": "07:50 AM"
+          },
+          {
+            "order": 6,
+            "stopName": "Model Town Link Road / Metro Station",
+            "time": "08:00 AM"
+          },
+          {
+            "order": 7,
+            "stopName": "Arfa Software Technology Park (ASTP) Campus",
+            "time": "08:15 AM"
+          }
         ]
       },
       {
@@ -356,14 +751,41 @@
         "name": "Wapda Town, Johar Town & Township Line",
         "vehicle": "Air-Conditioned Bus",
         "morningDepartureTime": "07:15 AM",
-        "eveningDepartureTimes": ["04:30 PM", "06:15 PM"],
+        "eveningDepartureTimes": [
+          "04:30 PM",
+          "06:15 PM"
+        ],
         "stops": [
-          { "order": 1, "stopName": "Wapda Town Roundabout (Main Gate)", "time": "07:15 AM" },
-          { "order": 2, "stopName": "Shaukat Khanum Memorial Hospital Chowk", "time": "07:25 AM" },
-          { "order": 3, "stopName": "Johar Town Expo Center / Emporium Mall Road", "time": "07:35 AM" },
-          { "order": 4, "stopName": "Akbar Chowk / Faisal Town", "time": "07:45 AM" },
-          { "order": 5, "stopName": "Peco Road / Kot Lakhpat", "time": "07:55 AM" },
-          { "order": 6, "stopName": "Model Town Metro Station / Arfa Tower", "time": "08:12 AM" }
+          {
+            "order": 1,
+            "stopName": "Wapda Town Roundabout (Main Gate)",
+            "time": "07:15 AM"
+          },
+          {
+            "order": 2,
+            "stopName": "Shaukat Khanum Memorial Hospital Chowk",
+            "time": "07:25 AM"
+          },
+          {
+            "order": 3,
+            "stopName": "Johar Town Expo Center / Emporium Mall Road",
+            "time": "07:35 AM"
+          },
+          {
+            "order": 4,
+            "stopName": "Akbar Chowk / Faisal Town",
+            "time": "07:45 AM"
+          },
+          {
+            "order": 5,
+            "stopName": "Peco Road / Kot Lakhpat",
+            "time": "07:55 AM"
+          },
+          {
+            "order": 6,
+            "stopName": "Model Town Metro Station / Arfa Tower",
+            "time": "08:12 AM"
+          }
         ]
       }
     ],
@@ -451,6 +873,30 @@
     {
       "question": "Is ITU recognized by HEC and NCEAC?",
       "answer": "Yes, Information Technology University (ITU) is chartered by the Punjab Government, fully recognized by HEC, and its computing degrees (BSCS and BSAI) carry the highest accreditation tier from the National Computing Education Accreditation Council (NCEAC)."
+    },
+    {
+      "keywords": [
+        "can i get admission",
+        "admission into bscs",
+        "admission into bsai",
+        "how to get admission",
+        "bscs admission",
+        "bsai admission",
+        "eligibility criteria"
+      ],
+      "question": "Can I get admission into BSCS or BSAI at ITU?",
+      "answer": "Yes! You can get admission into BSCS (Bachelor of Science in Computer Science) or BSAI (Bachelor of Science in Artificial Intelligence) at ITU if you fulfill the eligibility and aggregate merit criteria:\n\n1. **Academic Eligibility:** At least 50% overall marks in Intermediate (HSSC) Pre-Engineering, ICS (Mathematics, Physics, CS), or F.Sc Pre-Medical (with 6-credit mathematics deficiency course in first year per HEC policy), or A-Levels with Mathematics and minimum 50% IBCC grade equivalence.\n2. **Admission Test:** Passing the ITU Admissions Test (CS/AI Stream) OR presenting a valid NTS-NAT (NAT-IE / NAT-ICS) or USAT score taken within the last 12 months.\n3. **Aggregate Merit Formula:**\n   • Matric / O-Levels: 15%\n   • Intermediate / HSSC Part-1: 35%\n   • Admission Test: 50%\n4. **Previous Closing Merits:** BSCS closing merit was ~81.2% (2024) and projected ~82.0% (2025); BSAI closing merit was ~83.8% (2024) and projected ~84.5% (2025)."
+    },
+    {
+      "keywords": [
+        "difference between bscs and bsai",
+        "bscs vs bsai",
+        "which program is right for you",
+        "which is better bscs or bsai",
+        "compare bscs bsai"
+      ],
+      "question": "What is the difference between BSCS and BSAI at ITU, and which program is right for me?",
+      "answer": "Both BSCS and BSAI are 4-year (8 semesters, 130+ credit hours) undergraduate computing degrees accredited by HEC and NCEAC at ITU:\n\n• **BSCS (Computer Science):** Offers broad and comprehensive foundational computing knowledge including Data Structures, Algorithms, Software Engineering, Operating Systems, Database Systems, Computer Networks, and Full-Stack Development. It is ideal if you want versatile career options as a Software Engineer, Systems Architect, or Full-Stack Developer.\n\n• **BSAI (Artificial Intelligence):** Centers specifically on AI theory and practical applications, with advanced courses in Machine Learning, Deep Learning, Computer Vision, Natural Language Processing (NLP), Robotics, and Autonomous Systems. It is ideal if you are passionate about data science, predictive modeling, generative AI, and intelligent systems engineering.\n\n• **Which is right for you?** Choose **BSCS** for broad software engineering opportunities; choose **BSAI** if you want deep specialization in machine learning, neural networks, and modern AI algorithms."
     }
   ]
 }

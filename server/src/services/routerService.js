@@ -1,5 +1,10 @@
 import cosineSimilarity from 'compute-cosine-similarity';
 import { loadKnowledge } from './knowledgeService.js';
+import {
+  findLearnedMemoryMatch,
+  warmLearnedMemoryIndex,
+  recordLearnedEmbedding
+} from './learnedMemoryService.js';
 
 let knowledgeEmbeddings = [];
 
@@ -24,7 +29,10 @@ export async function fetchEmbedding(text) {
     });
 
     if (!res.ok) {
-      throw new Error(`Embedding request failed with status ${res.status}`);
+      const errorBody = await res.text().catch(() => '');
+      throw new Error(
+        `Embedding request failed with status ${res.status}${errorBody ? `: ${errorBody}` : ''}`
+      );
     }
 
     const data = await res.json();
@@ -39,10 +47,7 @@ export async function fetchEmbedding(text) {
       ? 'Ollama embedding request timed out after 15s.'
       : err.message;
 
-    console.warn(
-      'Ollama embedding service offline or uninitialized:',
-      message
-    );
+    console.warn('Ollama embedding request failed:', message);
 
     return null;
   } finally {
@@ -188,7 +193,16 @@ Credit hours: ${program.totalCreditHours || ''}
 Accreditation: ${program.accreditation || ''}
 Overview: ${program.overview || ''}
 
-${stringify(program)}
+${stringify({
+  name: program.name,
+  code: program.code,
+  degreeDurationYears: program.degreeDurationYears,
+  semesters: program.semesters,
+  totalCreditHours: program.totalCreditHours,
+  accreditation: program.accreditation,
+  overview: program.overview,
+  keywords: program.keywords
+})}
           `
         });
       }
@@ -469,6 +483,11 @@ ${stringify(kb.frequentlyAskedQuestions)}
     console.log(
       `ITU Vector Store Ready: ${knowledgeEmbeddings.length}/${sectionsToEmbed.length} sections indexed.`
     );
+
+    // Warm and load cached embeddings for learned memory queries
+    await warmLearnedMemoryIndex(fetchEmbedding).catch(err => {
+      console.warn('[VectorStore] Memory index warming notice:', err.message);
+    });
   } catch (error) {
     console.error(
       'Vector Store Initialization Error:',
@@ -522,6 +541,17 @@ export async function classifyQuery(message, explicitMode = 'auto') {
     };
   }
 
+  const transportIntent = /\b(transport|bus|buses|shuttle|metro|pickup|commute)\b/.test(normalized)
+    || /\broute\s*(?:number\s*)?[1-4]\b/.test(normalized);
+  if (transportIntent) {
+    return {
+      mode: 'itu',
+      confidence: 0.95,
+      category: 'transport',
+      reason: 'ITU transport or numbered route intent detected.'
+    };
+  }
+
   /*
    * EMBEDDING SEARCH
    */
@@ -543,20 +573,42 @@ export async function classifyQuery(message, explicitMode = 'auto') {
       }
     }
 
+    // Check learned memory store using semantic similarity
+    const learnedMemory = findLearnedMemoryMatch({ message, queryEmbedding });
+
     /*
      * ITU threshold
      *
-     * 0.30 is used as a reasonable starting point.
-     * We can tune this later using real questions.
+     * 0.50 is used as a reasonable starting point.
      */
     const ITU_THRESHOLD = 0.50;
 
     if (maxSimilarity >= ITU_THRESHOLD) {
+      const combinedConfidence = learnedMemory
+        ? Math.max(maxSimilarity, learnedMemory.similarity)
+        : maxSimilarity;
+
       return {
         mode: 'itu',
-        confidence: Number(maxSimilarity.toFixed(2)),
+        confidence: Number(combinedConfidence.toFixed(2)),
         category: bestMatch?.category || null,
-        reason: `Matched ITU knowledge category "${bestMatch?.category}" with semantic similarity ${maxSimilarity.toFixed(2)}.`
+        queryEmbedding,
+        learnedMemory,
+        reason: learnedMemory
+          ? `Matched ITU knowledge category "${bestMatch?.category}" (${maxSimilarity.toFixed(2)}) with learned memory support (${learnedMemory.similarity.toFixed(2)}).`
+          : `Matched ITU knowledge category "${bestMatch?.category}" with semantic similarity ${maxSimilarity.toFixed(2)}.`
+      };
+    }
+
+    // If static knowledge didn't hit threshold, but learned memory matched an ITU question strongly
+    if (learnedMemory && (learnedMemory.match.mode === 'itu' || !learnedMemory.match.mode) && learnedMemory.similarity >= 0.75) {
+      return {
+        mode: 'itu',
+        confidence: Number(learnedMemory.similarity.toFixed(2)),
+        category: 'learned_memory',
+        queryEmbedding,
+        learnedMemory,
+        reason: `Matched previously learned ITU question "${learnedMemory.matchedQuery}" with semantic similarity ${learnedMemory.similarity.toFixed(2)}.`
       };
     }
 
@@ -564,7 +616,21 @@ export async function classifyQuery(message, explicitMode = 'auto') {
       mode: 'general',
       confidence: Number(maxSimilarity.toFixed(2)),
       category: null,
+      queryEmbedding,
+      learnedMemory,
       reason: `No sufficiently relevant ITU knowledge found. Best similarity was ${maxSimilarity.toFixed(2)}.`
+    };
+  }
+
+  // If embeddings were not available, check for exact match in learned memory
+  const exactMemoryMatch = findLearnedMemoryMatch({ message });
+  if (exactMemoryMatch && exactMemoryMatch.match.mode === 'itu') {
+    return {
+      mode: 'itu',
+      confidence: 0.95,
+      category: 'learned_memory',
+      learnedMemory: exactMemoryMatch,
+      reason: exactMemoryMatch.reason
     };
   }
 

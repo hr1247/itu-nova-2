@@ -3,7 +3,7 @@ import MessageItem from './MessageItem';
 import QuickSuggestions from './QuickSuggestions';
 import { MessageSquare, GraduationCap, Globe } from 'lucide-react';
 
-export default function MessageList({ messages, loading, onSelectPrompt }) {
+export default function MessageList({ messages, loading, onSelectPrompt, onSubmitFeedback }) {
   const bottomRef = useRef(null);
 
   useEffect(() => {
@@ -24,7 +24,9 @@ export default function MessageList({ messages, loading, onSelectPrompt }) {
         <MessageItem 
           key={msg.id || i} 
           message={msg} 
+          question={[...messages.slice(0, i)].reverse().find(item => item.role === 'user')?.content || ''}
           onSuggestionClick={onSelectPrompt} 
+          onSubmitFeedback={onSubmitFeedback}
         />
       ))}
 

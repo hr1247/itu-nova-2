@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { X, BookOpen, DollarSign, Calculator, Building2, Check, Award, ChevronRight } from 'lucide-react';
-import ituKnowledge from '../data/itu_knowledge.json';
+import { fetchKnowledge } from '../services/api';
 
 export default function KnowledgeExplorerModal({ isOpen, onClose }) {
   const [activeTab, setActiveTab] = useState('programs');
@@ -12,8 +12,39 @@ export default function KnowledgeExplorerModal({ isOpen, onClose }) {
   const [interMarks, setInterMarks] = useState(440);
   const [interTotal, setInterTotal] = useState(520);
   const [testScore, setTestScore] = useState(78);
+  const [ituKnowledge, setItuKnowledge] = useState(null);
+  const [knowledgeError, setKnowledgeError] = useState('');
+
+  useEffect(() => {
+    if (!isOpen) return undefined;
+
+    let cancelled = false;
+    setKnowledgeError('');
+    fetchKnowledge()
+      .then(knowledge => {
+        if (!cancelled) setItuKnowledge(knowledge);
+      })
+      .catch(error => {
+        if (!cancelled) setKnowledgeError(error.message);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isOpen]);
 
   if (!isOpen) return null;
+
+  if (!ituKnowledge) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 p-4">
+        <div className="rounded-xl border border-slate-700 bg-slate-900 p-6 text-center">
+          <p className="text-sm text-slate-200">{knowledgeError || 'Loading ITU knowledge...'}</p>
+          {knowledgeError && <button onClick={onClose} className="mt-4 text-sm text-blue-300">Close</button>}
+        </div>
+      </div>
+    );
+  }
 
   const bscs = ituKnowledge.academicPrograms.undergraduate.find(p => p.id === 'bscs');
   const bsai = ituKnowledge.academicPrograms.undergraduate.find(p => p.id === 'bsai');

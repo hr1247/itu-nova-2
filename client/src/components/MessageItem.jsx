@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Copy, Check, User, MessageSquare, Sparkles } from 'lucide-react';
+import { Copy, Check, User, MessageSquare, Sparkles, ThumbsUp, ThumbsDown, PencilLine, Send } from 'lucide-react';
 import ModeBadge from './ModeBadge';
 
 /* ─── Inline-formatting helper ───────────────────────────────────────── */
@@ -168,15 +168,41 @@ function Markdown({ content }) {
 }
 
 /* ─── Message Item ───────────────────────────────────────────────────── */
-export default function MessageItem({ message, onSuggestionClick }) {
+export default function MessageItem({ message, question, onSuggestionClick, onSubmitFeedback }) {
   const isUser = message.role === 'user';
   const [copied, setCopied] = useState(false);
+  const [feedbackStatus, setFeedbackStatus] = useState('');
+  const [feedbackError, setFeedbackError] = useState('');
+  const [correctionOpen, setCorrectionOpen] = useState(false);
+  const [correction, setCorrection] = useState('');
+  const [feedbackBusy, setFeedbackBusy] = useState(false);
 
   // Normalizes text content from various potential keys
   const messageText = message.content || message.reply || message.text || '';
   const suggestions = message.suggestions || [];
 
   const copy = () => { navigator.clipboard.writeText(messageText); setCopied(true); setTimeout(() => setCopied(false), 2000); };
+
+  const sendFeedback = async (rating, proposedCorrection = '') => {
+    if (!onSubmitFeedback || feedbackBusy) return;
+    setFeedbackBusy(true);
+    setFeedbackError('');
+    try {
+      const result = await onSubmitFeedback({
+        question,
+        answer: messageText,
+        rating,
+        correction: proposedCorrection
+      });
+      setFeedbackStatus(result.message || 'Thanks for your feedback.');
+      setCorrectionOpen(false);
+      setCorrection('');
+    } catch (error) {
+      setFeedbackError(error.message || 'Could not submit feedback.');
+    } finally {
+      setFeedbackBusy(false);
+    }
+  };
 
   const timeStr = message.timestamp
     ? new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
@@ -243,6 +269,66 @@ export default function MessageItem({ message, onSuggestionClick }) {
                 <span>{suggestionText}</span>
               </button>
             ))}
+          </div>
+        )}
+
+        {!isUser && message.mode === 'itu' && question && (
+          <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px]">
+            <button
+              type="button"
+              onClick={() => sendFeedback('helpful')}
+              disabled={feedbackBusy || Boolean(feedbackStatus)}
+              title="Mark this answer helpful"
+              className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-slate-400 hover:bg-slate-800 hover:text-emerald-300 disabled:opacity-50"
+            >
+              <ThumbsUp className="h-3.5 w-3.5" /> Helpful
+            </button>
+            <button
+              type="button"
+              onClick={() => sendFeedback('not_helpful')}
+              disabled={feedbackBusy || Boolean(feedbackStatus)}
+              title="Mark this answer not helpful"
+              className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-slate-400 hover:bg-slate-800 hover:text-rose-300 disabled:opacity-50"
+            >
+              <ThumbsDown className="h-3.5 w-3.5" /> Not helpful
+            </button>
+            <button
+              type="button"
+              onClick={() => setCorrectionOpen(open => !open)}
+              disabled={feedbackBusy}
+              className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-blue-300 hover:bg-slate-800 disabled:opacity-50"
+            >
+              <PencilLine className="h-3.5 w-3.5" /> Suggest correction
+            </button>
+            {feedbackStatus && <span role="status" className="text-emerald-300">{feedbackStatus}</span>}
+            {feedbackError && <span role="alert" className="text-rose-300">{feedbackError}</span>}
+            {correctionOpen && (
+              <form
+                className="flex basis-full flex-col gap-2 sm:flex-row"
+                onSubmit={event => {
+                  event.preventDefault();
+                  if (correction.trim()) sendFeedback('not_helpful', correction.trim());
+                }}
+              >
+                <textarea
+                  value={correction}
+                  onChange={event => setCorrection(event.target.value)}
+                  maxLength={4000}
+                  required
+                  rows={2}
+                  placeholder="What should the correct ITU answer say?"
+                  className="min-w-0 flex-1 resize-y rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-xs text-slate-100 placeholder:text-slate-500 focus:border-blue-500 focus:outline-none"
+                />
+                <button
+                  type="submit"
+                  disabled={!correction.trim() || feedbackBusy}
+                  title="Use this correction for this exact question"
+                  className="inline-flex items-center justify-center gap-1 self-end rounded-md bg-blue-600 px-3 py-2 text-xs font-medium text-white hover:bg-blue-500 disabled:opacity-50"
+                >
+                  <Send className="h-3.5 w-3.5" /> Submit
+                </button>
+              </form>
+            )}
           </div>
         )}
       </div>

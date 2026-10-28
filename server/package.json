@@ -6,13 +6,16 @@
   "type": "module",
   "scripts": {
     "start": "node src/index.js",
-    "dev": "node --watch src/index.js"
+    "dev": "node --watch src/index.js",
+    "review-learning": "node src/scripts/reviewLearning.js",
+    "test": "node --test"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
     "compute-cosine-similarity": "^1.1.0",
     "cors": "^2.8.6",
     "dotenv": "^16.6.1",
-    "express": "^4.22.3"
+    "express": "^4.22.3",
+    "openai": "^7.45.1"
   }
 }

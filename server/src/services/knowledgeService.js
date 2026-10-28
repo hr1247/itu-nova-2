@@ -32,13 +32,29 @@ export function loadKnowledge() {
   }
 }
 
+export function getKnowledgeAgeDays(now = Date.now()) {
+  try {
+    const modifiedAt = fs.statSync(knowledgePath).mtimeMs;
+    return Math.max(0, (now - modifiedAt) / (24 * 60 * 60 * 1000));
+  } catch {
+    return null;
+  }
+}
+
 /**
  * Simple context builder for RAG generation
  */
-function summarizeAcademicPrograms(programs) {
+function summarizeAcademicPrograms(programs, userQuery = '') {
   if (!Array.isArray(programs)) return programs;
 
-  return programs.map(program => ({
+  const normalizedQuery = userQuery.toLowerCase();
+  const matchedPrograms = programs.filter(program =>
+    normalizedQuery.includes(program.code?.toLowerCase() || '')
+  );
+  const requestedPrograms = matchedPrograms.length > 0 ? matchedPrograms : programs;
+  const includeCurriculum = /curriculum|course outline|courses|semester courses/i.test(normalizedQuery);
+
+  return requestedPrograms.map(program => ({
     name: program.name,
     code: program.code,
     degreeDurationYears: program.degreeDurationYears,
@@ -47,34 +63,111 @@ function summarizeAcademicPrograms(programs) {
     overview: program.overview,
     keywords: program.keywords,
     feeStructure: program.feeStructure ? {
-      perCreditHour: program.feeStructure.perCreditHour,
-      admissionFee: program.feeStructure.admissionFee,
-      securityDeposit: program.feeStructure.securityDeposit,
-      estimatedSemesterTuition: program.feeStructure.estimatedSemesterTuition
+      currency: program.feeStructure.currency,
+      feePerCreditHour: program.feeStructure.feePerCreditHour,
+      admissionFeeOneTime: program.feeStructure.admissionFeeOneTime,
+      securityDepositRefundable: program.feeStructure.securityDepositRefundable,
+      registrationFeePerSemester: program.feeStructure.registrationFeePerSemester,
+      typicalSemesterCreditHours: program.feeStructure.typicalSemesterCreditHours,
+      estimatedTuitionPerSemester: program.feeStructure.estimatedTuitionPerSemester,
+      estimatedFirstSemesterTotal: program.feeStructure.estimatedFirstSemesterTotal,
+      subsequentSemesterAverage: program.feeStructure.subsequentSemesterAverage,
+      totalDegreeCostEstimate: program.feeStructure.totalDegreeCostEstimate,
+      scholarshipsAvailable: program.feeStructure.scholarshipsAvailable
     } : undefined,
     meritFormula: program.meritFormula ? {
-      formula: program.meritFormula.formula,
-      weights: program.meritFormula.weights,
-      previousClosingMerit: program.meritFormula.previousClosingMerit
+      breakdown: program.meritFormula.breakdown,
+      formulaText: program.meritFormula.formulaText,
+      example: program.meritFormula.example,
+      previousClosingMerits: program.meritFormula.previousClosingMerits
     } : undefined,
     eligibility: program.eligibility ? {
-      minimumIntermediate: program.eligibility.minimumIntermediate,
-      requirements: program.eligibility.requirements,
-      preferredBackground: program.eligibility.preferredBackground
-    } : undefined
+      academicQualifications: program.eligibility.academicQualifications,
+      minimumPercentage: program.eligibility.minimumPercentage,
+      testRequirements: program.eligibility.testRequirements
+    } : undefined,
+    ...(includeCurriculum ? { curriculumOutline: program.curriculumOutline } : {})
   }));
 }
 
-function summarizeCampusInfo(campus) {
+export function isCampusLocationQuery(query) {
+  const normalizedQuery = String(query || '').toLowerCase();
+  const asksWhere = /\bwhere\s+(?:is|are)\b/i.test(normalizedQuery);
+  const asksForCampusAddress = /\b(?:main|new|permanent)?\s*campus\s+(?:location|address)\b|\b(?:location|address)\s+of\b.*\b(?:campus|itu|university|astp|arfa)\b|\bdirections?\s+to\b.*\b(?:campus|itu|university|astp|arfa)\b|\bhow\s+(?:do|can)\s+i\s+get\s+to\b.*\b(?:campus|itu|university|astp|arfa)\b/i.test(normalizedQuery);
+  const asksForLibraryLocation = /\blibrary\b/i.test(normalizedQuery)
+    && (asksWhere || /\blibrary\s+(?:location|address)\b/i.test(normalizedQuery));
+  const asksWhereForCampus = asksWhere
+    && /\b(?:campus|itu|university|lahore|astp|arfa)\b/i.test(normalizedQuery)
+    && !asksForLibraryLocation;
+
+  return asksForCampusAddress || asksWhereForCampus;
+}
+
+function summarizeCampusInfo(campus, userQuery = '') {
   if (!campus) return campus;
 
-  return {
-    researchLabs: Array.isArray(campus.researchLabs)
+  const query = userQuery.toLowerCase();
+  const requested = {};
+  const asksForLabs = /\blabs?\b|\bresearch\b/i.test(query);
+  const asksForSocieties = /societ|club|sports/i.test(query);
+  const asksForLibrary = /library|book|resource/i.test(query);
+  const asksForIndustry = /plan\s*9|incubat|industry|innovation/i.test(query);
+  const broadFacilitiesRequest = /facilit|campus life|student life|campus overview/i.test(query);
+  const includeAll = broadFacilitiesRequest
+    && !asksForLabs
+    && !asksForSocieties
+    && !asksForLibrary
+    && !asksForIndustry;
+
+  if (asksForLabs || includeAll) {
+    requested.researchLabs = Array.isArray(campus.researchLabs)
       ? campus.researchLabs.map(item => ({ name: item.name, focus: item.focus }))
-      : campus.researchLabs,
-    studentSocieties: campus.studentSocieties,
-    library: campus.library,
-    incubationAndIndustry: campus.incubationAndIndustry
+      : campus.researchLabs;
+  }
+  if (asksForSocieties || includeAll) requested.studentSocieties = campus.studentSocieties;
+  if (asksForLibrary || includeAll) requested.library = campus.library;
+  if (asksForIndustry || includeAll) requested.incubationAndIndustry = campus.incubationAndIndustry;
+
+  return Object.keys(requested).length > 0
+    ? requested
+    : {
+        researchLabs: Array.isArray(campus.researchLabs)
+          ? campus.researchLabs.map(item => ({ name: item.name, focus: item.focus }))
+          : campus.researchLabs,
+        studentSocieties: campus.studentSocieties,
+        library: campus.library,
+        incubationAndIndustry: campus.incubationAndIndustry
+      };
+}
+
+function summarizeCampusLocations(university) {
+  return (university?.campuses || []).map(campus => ({
+    name: campus.name,
+    location: campus.location,
+    status: campus.status,
+    description: campus.description
+  }));
+}
+
+function summarizeAdmissionsCycle(admissionsCycle, query) {
+  if (!admissionsCycle) return admissionsCycle;
+
+  const yearMatch = query.match(/\b(20\d{2})\b/);
+  const requestedYear = yearMatch?.[1];
+  const historicalYear = requestedYear
+    ? admissionsCycle.history?.[`year${requestedYear}`]
+    : null;
+
+  if (historicalYear) {
+    return {
+      requestedYear,
+      history: historicalYear
+    };
+  }
+
+  return {
+    academicYear: admissionsCycle.academicYear,
+    schedules: admissionsCycle.schedules
   };
 }
 
@@ -86,20 +179,25 @@ function deriveRelevantSections(kb, userQuery) {
     return selected;
   }
 
+  if (isCampusLocationQuery(q)) {
+    selected.campuses = summarizeCampusLocations(kb.university);
+    return selected;
+  }
+
   if (/program|degree|course|curriculum|bscs|bsai|computer science|artificial intelligence|undergraduate|major/i.test(q)) {
-    selected.academicPrograms = summarizeAcademicPrograms(kb.academicPrograms?.undergraduate);
+    selected.academicPrograms = summarizeAcademicPrograms(kb.academicPrograms?.undergraduate, q);
   }
 
   if (/fee|tuition|credit hour|cost|scholarship|financial aid|semester|admission fee|security deposit/i.test(q)) {
-    selected.academicPrograms = summarizeAcademicPrograms(kb.academicPrograms?.undergraduate);
+    selected.academicPrograms = summarizeAcademicPrograms(kb.academicPrograms?.undergraduate, q);
   }
 
   if (/merit|eligibility|aggregate|entry test|nat|usat|intermediate|a-level|matric|requirements/i.test(q)) {
-    selected.academicPrograms = summarizeAcademicPrograms(kb.academicPrograms?.undergraduate);
+    selected.academicPrograms = summarizeAcademicPrograms(kb.academicPrograms?.undergraduate, q);
   }
 
-  if (/campus|facility|facilities|lab|library|society|sports|student life|research|plan9|incubation|industry/i.test(q)) {
-    selected.campusLifeAndFacilities = summarizeCampusInfo(kb.campusLifeAndFacilities);
+  if (/\bfacilities?\b|\blabs?\b|\blibrary\b|\bsociet(?:y|ies)\b|\bsports\b|student life|\bresearch\b|plan\s*9|\bincubation\b|\bindustry\b/i.test(q)) {
+    selected.campusLifeAndFacilities = summarizeCampusInfo(kb.campusLifeAndFacilities, q);
   }
 
   if (/transport|route|bus|metro|shuttle|pickup|travel|journey/i.test(q)) {
@@ -107,7 +205,7 @@ function deriveRelevantSections(kb, userQuery) {
   }
 
   if (/admission|apply|deadline|date|open|intake|merit list|orientation|classes|spring|fall/i.test(q)) {
-    selected.admissionsCycle = kb.admissionsCycle;
+    selected.admissionsCycle = summarizeAdmissionsCycle(kb.admissionsCycle, q);
   }
 
   if (Object.keys(selected).length === 0) {
@@ -136,7 +234,7 @@ export function getRelevantITUContext(userQuery) {
   const compactContext = JSON.stringify(relevantSections, null, 2);
 
   return {
-    context: compactContext.length > 7000 ? `${compactContext.slice(0, 7000)}...` : compactContext,
+    context: compactContext,
     sources: ['ITU Knowledge Base']
   };
 }

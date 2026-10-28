@@ -5,7 +5,7 @@ import ChatInput from './components/ChatInput';
 import ConversationHistoryModal from './components/ConversationHistoryModal';
 import KnowledgeExplorerModal from './components/KnowledgeExplorerModal';
 import TransportModal from './components/TransportModal';
-import { sendChatMessage, checkServerHealth } from './services/api';
+import { sendChatMessage, submitFeedback, checkServerHealth } from './services/api';
 
 const INITIAL_GREETING = {
   id: 'init-1',
@@ -183,6 +183,8 @@ export default function App() {
     }
   };
 
+  const handleSubmitFeedback = (feedback) => submitFeedback(feedback);
+
   return (
     <div className="flex flex-col min-h-screen gradient-mesh">
       {/* Navigation Header */}
@@ -204,6 +206,7 @@ export default function App() {
           messages={messages}
           loading={loading}
           onSelectPrompt={handleSendMessage}
+          onSubmitFeedback={handleSubmitFeedback}
         />
 
         {/* Input Bar */}

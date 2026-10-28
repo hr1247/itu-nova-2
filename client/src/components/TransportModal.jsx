@@ -1,11 +1,42 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { X, Bus, Clock, MapPin, DollarSign, Navigation, ArrowRight } from 'lucide-react';
-import ituKnowledge from '../data/itu_knowledge.json';
+import { fetchKnowledge } from '../services/api';
 
 export default function TransportModal({ isOpen, onClose }) {
   const [selectedRouteIdx, setSelectedRouteIdx] = useState(0);
+  const [ituKnowledge, setItuKnowledge] = useState(null);
+  const [knowledgeError, setKnowledgeError] = useState('');
+
+  useEffect(() => {
+    if (!isOpen) return undefined;
+
+    let cancelled = false;
+    setKnowledgeError('');
+    fetchKnowledge()
+      .then(knowledge => {
+        if (!cancelled) setItuKnowledge(knowledge);
+      })
+      .catch(error => {
+        if (!cancelled) setKnowledgeError(error.message);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isOpen]);
 
   if (!isOpen) return null;
+
+  if (!ituKnowledge) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 p-4">
+        <div className="rounded-xl border border-slate-700 bg-slate-900 p-6 text-center">
+          <p className="text-sm text-slate-200">{knowledgeError || 'Loading ITU transport data...'}</p>
+          {knowledgeError && <button onClick={onClose} className="mt-4 text-sm text-blue-300">Close</button>}
+        </div>
+      </div>
+    );
+  }
 
   const routes = ituKnowledge.transportation.routes;
   const currentRoute = routes[selectedRouteIdx];

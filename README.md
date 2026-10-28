@@ -155,16 +155,7 @@ npm run dev
 
 ## 🔑 Environment Configuration (Optional)
 
-ITU Nova works **100% out of the box** using its built-in knowledge retrieval and algorithmic reasoning engine. 
-
-To enable live Google Gemini generative completions:
-1. Open `server/.env` (or copy from `server/.env.example`).
-2. Add your Google Gemini API Key:
-   ```env
-   PORT=5000
-   GEMINI_API_KEY=AIzaSy...YourKeyHere
-   ```
-3. Restart the server. The backend will automatically activate Google Gemini.
+General responses use Groq, while ITU-grounded responses and embeddings use local Ollama. Configure `GROQ_API_KEY` and optionally `GROQ_MODEL` in `server/.env`; Ollama must be running locally with `llama3.2` and `nomic-embed-text` available.
 
 ---
 
@@ -203,7 +194,44 @@ Send a user prompt to be classified, grounded, and answered.
 Retrieves the complete structured ITU Knowledge Base JSON.
 
 ### 3. `GET /api/health`
-Health check status confirming server uptime and Gemini API status.
+Health check status confirming server uptime and Groq configuration.
+
+### 4. `POST /api/feedback`
+Submit a rating for an ITU answer, with an optional suggested correction.
+
+```json
+{
+  "question": "What is the BSCS fee per credit hour at ITU?",
+  "answer": "PKR 9,000",
+  "rating": "not_helpful",
+  "correction": "The BSCS fee is PKR 9,200 per credit hour."
+}
+```
+
+Ratings are stored as feedback. Suggested corrections are saved as pending candidates and do not affect answers until a reviewer approves them. After approval, exact and semantically similar questions can use the correction (Ollama embedding similarity threshold: 0.68). Review submitted corrections for accuracy before approval.
+
+## 🧠 Reviewed Learning
+
+ITU answers include Helpful, Not helpful, and Suggest correction controls. These are optional signals; automatic learning also analyzes normal chat requests. Corrections are stored in `server/data/learning_feedback.json`, and interaction analytics are stored in `server/data/self_learning.json`; both generated files are ignored by Git. At startup, legacy corrections that were activated automatically are moved to pending review.
+
+```bash
+npm --prefix server run review-learning -- list
+npm --prefix server run review-learning -- approve <id>
+npm --prefix server run review-learning -- reject <id>
+npm --prefix server run review-learning -- summary
+npm --prefix server run review-learning -- candidates
+npm --prefix server run review-learning -- dismiss-candidate <id>
+```
+
+The backend automatically logs interactions, clusters similar questions with local `nomic-embed-text` embeddings, tracks route/retrieval confidence, and opens knowledge-gap candidates after repeated weak or fallback answers. It can use learned topic clusters as Auto-routing hints. Model-generated candidate answers are explicitly marked unverified and are never inserted into official JSON knowledge. User corrections only enter retrieval after explicit local review. This is system-level adaptation, not model training or fine-tuning.
+
+The project has no configured trusted official-ITU update feed, so verified changes to the authoritative knowledge JSON still require a maintainer to validate and update that source. The learner records knowledge gaps and candidates but does not promote generated text or scrape arbitrary sites.
+
+Run the learning workflow tests with:
+
+```bash
+npm --prefix server test
+```
 
 ---
 

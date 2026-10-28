@@ -27,6 +27,9 @@ pnpm-debug.log*
 
 ## Local generated conversation memory
 src/data/learned_memory.json
+server/data/learning_feedback.json
+server/data/self_learning.json
+server/src/data/learned_memory_cache.json
 
 ## Operating system and editor files
 .DS_Store

@@ -1,8 +1,9 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { loadKnowledge } from './knowledgeService.js';
+import { isCampusLocationQuery, loadKnowledge } from './knowledgeService.js';
 import { buildPrompt } from '../utils/promptTemplates.js';
+import { recordLearnedEmbedding } from './learnedMemoryService.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -117,27 +118,156 @@ function extractStructuredText(parsed) {
   return 'Here is the requested information.';
 }
 
-function buildGroundedFallbackAnswer(userMessage, groundedContext = '') {
+export function buildGroundedFallbackAnswer(userMessage, groundedContext = '') {
+  if (groundedContext && groundedContext.includes('RELEVANT VERIFIED LEARNED KNOWLEDGE:')) {
+    const learnedMatch = groundedContext.match(/Answer:\s*([\s\S]+?)(?:\n\n[A-Z]|$)/);
+    if (learnedMatch && learnedMatch[1]?.trim()) {
+      return learnedMatch[1].trim();
+    }
+  }
+
   const lower = (userMessage || '').toLowerCase();
-  const isCampusQuery = lower.includes('campus') || lower.includes('facility') || lower.includes('facilities') || lower.includes('lab') || lower.includes('library');
+  const kb = loadKnowledge();
+  if (isCampusLocationQuery(lower)) {
+    const campuses = kb?.university?.campuses || [];
+    const mainCampus = campuses.find(campus => campus.id === 'main_astp') || campuses[0];
+    const permanentCampus = campuses.find(campus => campus.id === 'barki_campus');
+
+    if (mainCampus?.location) {
+      const additionalCampus = permanentCampus?.location
+        ? ` ITU also lists a ${permanentCampus.name.toLowerCase()} at ${permanentCampus.location}, described as being in phased development.`
+        : '';
+      return `ITU's main city campus is at ${mainCampus.location}.${additionalCampus}`;
+    }
+  }
+
+  const transport = kb?.transportation;
+  const isTransportQuery = /transport|bus|shuttle|route|pickup|metro|commute|travel/.test(lower);
+
+  if (isTransportQuery && transport?.routes?.length) {
+    const routeNumber = lower.match(/\broute\s*(?:number\s*)?([1-4])\b/)?.[1];
+    const routeByArea = transport.routes.find(route =>
+      route.name.toLowerCase().split(/[^a-z0-9]+/).some(word => word.length > 3 && lower.includes(word))
+    );
+    const selectedRoutes = routeNumber
+      ? transport.routes.filter(route => route.routeNumber.endsWith(routeNumber))
+      : routeByArea
+        ? [routeByArea]
+        : transport.routes;
+    const wantsStops = /stop|stops|pickup|pick up|where does|via|through/.test(lower);
+    const wantsRoutes = /routes|which routes|route numbers/.test(lower);
+
+    if (selectedRoutes.length === 1 && routeNumber && wantsStops) {
+      const route = selectedRoutes[0];
+      const stops = route.stops.map(stop => `${stop.stopName} (${stop.time})`).join('; ');
+      return `${route.routeNumber} (${route.name}) uses an ${route.vehicle}. Morning departure is ${route.morningDepartureTime}; evening departures are ${route.eveningDepartureTimes.join(' and ')}. Stops: ${stops}.`;
+    }
+
+    if (selectedRoutes.length === 1 && routeNumber) {
+      const route = selectedRoutes[0];
+      const areas = route.stops.map(stop => stop.stopName).join(', ');
+      return `${route.routeNumber} is the ${route.name}. It serves these areas and stops: ${areas}. Morning departure is ${route.morningDepartureTime}; evening departures are ${route.eveningDepartureTimes.join(' and ')}.`;
+    }
+
+    if (wantsRoutes) {
+      const routes = selectedRoutes.map(route =>
+        `${route.routeNumber}: ${route.name} (morning departure ${route.morningDepartureTime}; evening departures ${route.eveningDepartureTimes.join(' and ')})`
+      );
+      return `ITU operates air-conditioned buses/coasters to its ASTP campus. ${routes.join('. ')}. The transport fee is PKR ${transport.semesterFee.amountPKR.toLocaleString()} per semester.`;
+    }
+
+    return `${transport.overview} The semester transport fee is PKR ${transport.semesterFee.amountPKR.toLocaleString()} per semester. ${transport.metroBusConnectivity.details}`;
+  }
+
+  const admissionYearMatch = lower.match(/\b(20\d{2})\b/);
+  const admissionKeywords = /admission|application|apply|deadline|intake|entry test|merit list|orientation|classes/;
+
+  if (admissionKeywords.test(lower)) {
+    const admissions = kb?.admissionsCycle;
+
+    if (admissionYearMatch) {
+      const year = admissionYearMatch[1];
+      const history = admissions?.history?.[`year${year}`];
+      if (history) {
+        const sessions = Object.entries(history).map(([name, details]) => {
+          const label = name.charAt(0).toUpperCase() + name.slice(1);
+          return `${label}: applications opened ${details.applicationStart}, deadline ${details.applicationDeadline}, entry test ${details.testDates}, first merit list ${details.firstMeritList}, and classes started ${details.classesStart}.`;
+        });
+        return `The stored ITU admission history for ${year} shows ${sessions.join(' ')}`;
+      }
+    }
+
+    if (admissions?.schedules?.length) {
+      const schedules = admissions.schedules.map(schedule => {
+        const deadline = schedule.finalApplicationDeadline
+          ? ` The final application deadline was ${schedule.finalApplicationDeadline}.`
+          : '';
+        return `${schedule.session}: applications opened ${schedule.admissionsOpenDate}.${deadline}`;
+      });
+      const currentYear = new Date().getFullYear();
+      const currentMonth = new Date().getMonth();
+      const scheduleYear = Number(admissions.academicYear?.match(/20\d{2}/g)?.at(-1));
+      const scheduleIsOutdated = scheduleYear && (
+        currentYear > scheduleYear || (currentYear === scheduleYear && currentMonth >= 8)
+      );
+      const staleNotice = scheduleIsOutdated
+        ? ` This stored schedule is for ${admissions.academicYear} and does not confirm dates for the current admission cycle; verify current dates at ${kb.university?.contact?.website || 'the official ITU website'}.`
+        : '';
+
+      return `The stored ITU schedule for ${admissions.academicYear} lists ${schedules.join(' ')}${staleNotice}`;
+    }
+  }
+
+  const asksAdmissionEligibility = /\b(can\s+i\s+get\s+admission|eligib|admission\s+criteria|admission\s+requirements?|how\s+to\s+get\s+admission)\b/i.test(lower)
+    && /\b(bscs|bsai|computer science|artificial intelligence|undergraduate|programs?)\b/i.test(lower);
+
+  if (asksAdmissionEligibility) {
+    const bscs = kb?.academicPrograms?.undergraduate?.find(p => p.code === 'BSCS');
+    const bsai = kb?.academicPrograms?.undergraduate?.find(p => p.code === 'BSAI');
+    if (bscs || bsai) {
+      return "Yes! You can get admission into BSCS or BSAI at ITU if you satisfy the eligibility and aggregate merit criteria:\n\n1. **Academic Qualifications:** Minimum 50% overall marks in Intermediate (HSSC) Pre-Engineering, ICS (Mathematics, Physics, Computer Science), or Pre-Medical (with 6-credit Mathematics deficiency course in the first year per HEC), or A-Levels with Mathematics and minimum 50% IBCC equivalence.\n2. **Admission Test:** ITU Admissions Test (CS/AI Stream) OR a valid NTS-NAT (NAT-IE / NAT-ICS) / USAT score taken within the last 12 months.\n3. **Merit Formula:** Aggregate = (15% Matric) + (35% Intermediate Part-1/Total) + (50% Entry Test).\n4. **Previous Closing Merits:** BSCS closing merit was ~81.2% (projected ~82.0%), while BSAI closing merit was ~83.8% (projected ~84.5%).";
+    }
+  }
+
+  const isCampusQuery = /\bfacilities?\b|\blabs?\b|\blibrary\b|\bsociet(?:y|ies)\b|\bsports\b|student life|\bresearch\b|plan\s*9|\bincubation\b|\bindustry\b|\binnovation\b/.test(lower);
 
   if (!isCampusQuery) {
     return null;
   }
 
-  const kb = loadKnowledge();
   const campus = kb?.campusLifeAndFacilities;
 
   if (!campus) {
     return groundedContext ? `Based on the retrieved ITU data: ${groundedContext.slice(0, 400)}...` : null;
   }
 
-  const research = Array.isArray(campus.researchLabs) ? campus.researchLabs.map(item => item.name).join(', ') : 'research labs';
-  const societies = Array.isArray(campus.studentSocieties) ? campus.studentSocieties.join(', ') : 'student societies';
-  const library = campus.library?.location ? `${campus.library.location} with ${campus.library.resources}` : 'the main ITU library';
-  const plan9 = campus.incubationAndIndustry?.plan9 || 'Plan9 incubation access';
+  const wantsLabs = /\blabs?\b|\bresearch\b/.test(lower);
+  const wantsSocieties = /\bsociet(?:y|ies)\b|\bclubs?\b|\bsports\b/.test(lower);
+  const wantsLibrary = /\blibrary\b|\bbooks?\b|\bresources?\b/.test(lower);
+  const wantsIndustry = /plan\s*9|incubation|industry|innovation/.test(lower);
+  const broadFacilitiesRequest = /facilit|campus life|student life|campus overview/.test(lower);
+  const asksForSpecificCategories = wantsLabs || wantsSocieties || wantsLibrary || wantsIndustry;
+  const includeAll = broadFacilitiesRequest && !asksForSpecificCategories;
+  const details = [];
 
-  return `ITU has a strong campus environment with facilities including ${research}. Students also get access to student societies such as ${societies}. The library is at ${library}. The university is connected to innovation and industry through ${plan9}.`;
+  if (wantsLabs || includeAll) {
+    const labs = Array.isArray(campus.researchLabs) ? campus.researchLabs : [];
+    if (labs.length) details.push(`Research labs: ${labs.map(item => `${item.name} (${item.focus})`).join('; ')}`);
+  }
+  if (wantsSocieties || includeAll) {
+    const societies = campus.studentSocieties;
+    if (Array.isArray(societies) && societies.length) details.push(`Student societies: ${societies.join(', ')}`);
+  }
+  if (wantsLibrary || includeAll) {
+    const library = campus.library;
+    if (library) details.push(`Library: ${library.location || 'location not listed'}; resources: ${library.resources || 'details not listed'}`);
+  }
+  if (wantsIndustry || includeAll) {
+    const plan9 = campus.incubationAndIndustry?.plan9;
+    if (plan9) details.push(`Plan9 and industry: ${plan9}`);
+  }
+
+  return details.length ? details.join('\n') : null;
 }
 
 function normalizeModelResult(parsed, mode, userMessage, groundedContext = '') {
@@ -175,6 +305,10 @@ function logToLearnedMemory(entry) {
     }
 
     fs.writeFileSync(LEARNING_STORE_PATH, JSON.stringify(memory, null, 2));
+
+    if (entry.embedding && Array.isArray(entry.embedding)) {
+      recordLearnedEmbedding(entry.query, entry.embedding);
+    }
   } catch (err) {
     console.warn('[Self-Learning Memory] Failed to log interaction:', err.message);
   }
@@ -231,16 +365,7 @@ export async function generateResponse({ mode, userMessage, groundedContext = ''
     const responseText = normalized.text;
     const responseSuggestions = normalized.suggestions;
 
-    // 3. Self-Learning Loop: Save live fetched contexts or high-confidence answers locally
-    if (groundedContext || mode === 'itu') {
-      logToLearnedMemory({
-        query: userMessage,
-        response: responseText,
-        suggestions: responseSuggestions,
-        context: groundedContext,
-        mode
-      });
-    }
+    // Self-learning candidates are autonomously evaluated via autonomousLearningEngine
 
     return {
       text: responseText,
@@ -254,10 +379,13 @@ export async function generateResponse({ mode, userMessage, groundedContext = ''
 
     console.error('LLM Generation Error:', message);
 
-    // Dynamic local fallback if Ollama is unreachable
+    const groundedFallback = buildGroundedFallbackAnswer(userMessage, groundedContext);
+
     return {
-      text: 'Sorry, I could not generate an ITU-grounded answer right now. Please try again shortly or switch to General mode.',
-      suggestions: ['Retry query', 'Switch to General mode', 'Ask an ITU question']
+      text: groundedFallback || 'Sorry, I could not generate an ITU-grounded answer right now. Please try again shortly or switch to General mode.',
+      suggestions: groundedFallback
+        ? buildFallbackSuggestions(mode, userMessage)
+        : ['Retry query', 'Switch to General mode', 'Ask an ITU question']
     };
   }
 }

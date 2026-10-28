@@ -29,7 +29,6 @@
       "website": "https://itu.edu.pk"
     }
   },
-
   "admissionsCycle": {
     "academicYear": "2025 - 2026",
     "schedules": [
@@ -232,7 +231,6 @@
       ]
     }
   },
-
   "academicPrograms": {
     "undergraduate": [
       {
@@ -245,7 +243,10 @@
           "cs degree",
           "programming",
           "software engineering",
-          "coding degree"
+          "coding degree",
+          "admission into bscs",
+          "can i get admission in bscs",
+          "bscs eligibility"
         ],
         "degreeDurationYears": 4,
         "semesters": 8,
@@ -525,7 +526,6 @@
           }
         ]
       },
-
       {
         "id": "bsai",
         "name": "Bachelor of Science in Artificial Intelligence",
@@ -536,7 +536,10 @@
           "ai degree",
           "machine learning",
           "deep learning",
-          "robotics"
+          "robotics",
+          "admission into bsai",
+          "can i get admission in bsai",
+          "bsai eligibility"
         ],
         "degreeDurationYears": 4,
         "semesters": 8,
@@ -808,7 +811,6 @@
       }
     ]
   },
-
   "academicPolicies": {
     "gradingSystem": "4.00 Cumulative Grade Point Average (CGPA) Scale",
     "minimumPassingGrade": "D (1.00 Grade Point)",
@@ -817,7 +819,6 @@
     "addDropDeadline": "End of 2nd week of the semester (No academic penalty or transcript entry).",
     "courseWithdrawalDeadline": "End of 10th week of the semester ('W' grade recorded on transcript without impacting GPA)."
   },
-
   "transportation": {
     "overview": "ITU operates dedicated air-conditioned bus and coaster routes connecting all major hubs of Lahore to the Arfa Software Technology Park (ASTP) campus. Services run during morning arrivals and multiple afternoon/evening departure slots.",
     "semesterFee": {
@@ -1020,7 +1021,6 @@
       "details": "The Lahore Metro Bus directly connects Arfa Software Technology Park. Students can commute affordably from Gajjumatta to Shahdara directly via the Metro Bus Network with a stop immediately outside ASTP."
     }
   },
-
   "admissionGuidelines": {
     "applicationProcess": [
       "Step 1: Register on the ITU Online Admission Portal (admissions.itu.edu.pk).",
@@ -1038,7 +1038,6 @@
       "Paid Challan receipt copy."
     ]
   },
-
   "campusLifeAndFacilities": {
     "researchLabs": [
       {
@@ -1074,7 +1073,6 @@
       "industryInternships": "Over 90% of graduates placed in top tier IT firms (Systems Limited, Arbisoft, Netsol, Devsinc, VentureDive, Dubizzle/EMPG, Careem, and global tech firms)."
     }
   },
-
   "frequentlyAskedQuestions": [
     {
       "keywords": [
@@ -1095,7 +1093,7 @@
         "when admissions open",
         "last date"
       ],
-      "question": "What are the exact admission dates for ITU every year?",
+      "question": "What is the admission dates of ITU every year?",
       "answer": "Fall Admissions open on June 1 every year. The final deadline to apply online is July 31. Entrance tests are conducted in the first two weeks of August (August 1 - 12), first merit list is posted on August 18, and classes commence on September 3."
     },
     {
@@ -1157,6 +1155,30 @@
       ],
       "question": "What is the attendance and probation policy at ITU?",
       "answer": "ITU requires a minimum of 80% attendance in each course to be eligible for final exams. A CGPA below 2.00 places a student on academic probation."
+    },
+    {
+      "keywords": [
+        "can i get admission",
+        "admission into bscs",
+        "admission into bsai",
+        "how to get admission",
+        "bscs admission",
+        "bsai admission",
+        "eligibility criteria"
+      ],
+      "question": "Can I get admission into BSCS or BSAI at ITU?",
+      "answer": "Yes! You can get admission into BSCS (Bachelor of Science in Computer Science) or BSAI (Bachelor of Science in Artificial Intelligence) at ITU if you fulfill the eligibility and aggregate merit criteria:\n\n1. **Academic Eligibility:** At least 50% overall marks in Intermediate (HSSC) Pre-Engineering, ICS (Mathematics, Physics, CS), or F.Sc Pre-Medical (with 6-credit mathematics deficiency course in first year per HEC policy), or A-Levels with Mathematics and minimum 50% IBCC grade equivalence.\n2. **Admission Test:** Passing the ITU Admissions Test (CS/AI Stream) OR presenting a valid NTS-NAT (NAT-IE / NAT-ICS) or USAT score taken within the last 12 months.\n3. **Aggregate Merit Formula:**\n   • Matric / O-Levels: 15%\n   • Intermediate / HSSC Part-1: 35%\n   • Admission Test: 50%\n4. **Previous Closing Merits:** BSCS closing merit was ~81.2% (2024) and projected ~82.0% (2025); BSAI closing merit was ~83.8% (2024) and projected ~84.5% (2025)."
+    },
+    {
+      "keywords": [
+        "difference between bscs and bsai",
+        "bscs vs bsai",
+        "which program is right for you",
+        "which is better bscs or bsai",
+        "compare bscs bsai"
+      ],
+      "question": "What is the difference between BSCS and BSAI at ITU, and which program is right for me?",
+      "answer": "Both BSCS and BSAI are 4-year (8 semesters, 130+ credit hours) undergraduate computing degrees accredited by HEC and NCEAC at ITU:\n\n• **BSCS (Computer Science):** Offers broad and comprehensive foundational computing knowledge including Data Structures, Algorithms, Software Engineering, Operating Systems, Database Systems, Computer Networks, and Full-Stack Development. It is ideal if you want versatile career options as a Software Engineer, Systems Architect, or Full-Stack Developer.\n\n• **BSAI (Artificial Intelligence):** Centers specifically on AI theory and practical applications, with advanced courses in Machine Learning, Deep Learning, Computer Vision, Natural Language Processing (NLP), Robotics, and Autonomous Systems. It is ideal if you are passionate about data science, predictive modeling, generative AI, and intelligent systems engineering.\n\n• **Which is right for you?** Choose **BSCS** for broad software engineering opportunities; choose **BSAI** if you want deep specialization in machine learning, neural networks, and modern AI algorithms."
     }
   ]
 }

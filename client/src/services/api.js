@@ -40,6 +40,19 @@ export async function sendChatMessage(message, history = [], mode = 'auto') {
   }
 }
 
+export async function submitFeedback(feedback) {
+  const response = await fetch(`${API_BASE_URL}/api/feedback`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(feedback)
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(data.error || `Feedback request failed with status ${response.status}`);
+  }
+  return data;
+}
+
 export async function checkServerHealth() {
   try {
     const res = await fetch(`${API_BASE_URL}/api/health`);
@@ -52,14 +65,7 @@ export async function checkServerHealth() {
 }
 
 export async function fetchKnowledge() {
-  try {
-    const res = await fetch(`${API_BASE_URL}/api/knowledge`);
-    if (!res.ok) throw new Error('Failed to fetch knowledge');
-    return await res.json();
-  } catch (err) {
-    console.warn('Using local fallback knowledge file:', err);
-    // Dynamic import of local JSON
-    const local = await import('../data/itu_knowledge.json');
-    return local.default || local;
-  }
+  const res = await fetch(`${API_BASE_URL}/api/knowledge`);
+  if (!res.ok) throw new Error(`Failed to fetch knowledge (status ${res.status})`);
+  return res.json();
 }
