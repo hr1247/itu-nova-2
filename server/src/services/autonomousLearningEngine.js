@@ -146,7 +146,8 @@ export async function evaluateAndApplyCandidate(
       evidence: decision.evidence,
       confidence: decision.confidence,
       mode: 'itu',
-      embedding: Array.isArray(embedding) ? embedding : null
+      embedding: Array.isArray(embedding) ? embedding : null,
+      customPath: options.customMemoryPath || null
     });
 
     console.log(`[AUTONOMOUS LEARNING] ✅ Candidate ${candidate.id} APPROVED and added to verified RAG memory!`);

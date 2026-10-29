@@ -316,8 +316,8 @@ router.post('/chat', async (req, res) => {
       sources = ragResult.sources;
       if (classification.learnedHint) sources.push('Learned topic pattern');
 
-      // Inject partial or moderate learned memory match into grounding context
-      if (classification.learnedMemory?.match) {
+      // Inject high-confidence learned memory match into grounding context
+      if (classification.learnedMemory?.match && classification.learnedMemory.similarity >= 0.82) {
         const mem = classification.learnedMemory.match;
         const memoryContext = `RELEVANT VERIFIED LEARNED KNOWLEDGE:\nQuestion: "${mem.query}"\nAnswer: ${mem.response}`;
         groundedContext = groundedContext

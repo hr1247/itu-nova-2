@@ -71,6 +71,9 @@ export function loadLearnedMemory(customPath = null) {
       if (/sorry, I could not generate/i.test(resp)) return false;
       if (/provider is not available|offline mode/i.test(resp)) return false;
       if (/I am an AI assistant|not a student|personal preferences|as an AI language model|choice ultimately depends/i.test(resp)) return false;
+      if (resp.endsWith('?') && resp.length < 150) return false;
+      const q = e.query.trim().toLowerCase();
+      if (q === 'ask an itu question' || q.startsWith('ask an itu')) return false;
       return true;
     });
   } catch (err) {
@@ -197,6 +200,8 @@ export function appendLearnedMemoryEntry({
     const cleanQuery = String(query || '').trim();
     const cleanResponse = String(response || '').trim();
     if (!cleanQuery || !cleanResponse) return;
+    if (cleanQuery.toLowerCase() === 'ask an itu question' || cleanQuery.toLowerCase().startsWith('ask an itu')) return;
+    if (cleanResponse.endsWith('?') && cleanResponse.length < 150) return;
 
     const existingIndex = entries.findIndex(
       e => normalizeText(e.query) === normalizeText(cleanQuery)
@@ -251,7 +256,7 @@ export function appendLearnedMemoryEntry({
 export function findLearnedMemoryMatch({
   message,
   queryEmbedding = null,
-  minSimilarity = 0.75,
+  minSimilarity = 0.82,
   minDirectAnswerSimilarity = 0.92,
   customPath = null
 }) {
@@ -298,6 +303,15 @@ export function findLearnedMemoryMatch({
     }
 
     if (bestMatch && maxSimilarity >= minSimilarity) {
+      // Intent mismatch guards: don't allow cross-topic semantic collisions
+      const userAsksAcronym = /\b(full\s*form|stand\s*for|stands\s*for|acronym|abbreviation|meaning\s+of\s+itu)\b/i.test(message);
+      const matchAsksAcronym = /\b(full\s*form|stand\s*for|stands\s*for|acronym|abbreviation|meaning\s+of\s+itu)\b/i.test(bestMatch.query);
+      if (userAsksAcronym && !matchAsksAcronym) return null;
+
+      const userAsksFee = /\b(fee|tuition|cost|charges?)\b/i.test(message);
+      const matchAsksFee = /\b(fee|tuition|cost|charges?)\b/i.test(bestMatch.query);
+      if (userAsksFee && !matchAsksFee) return null;
+
       const roundedScore = Number(maxSimilarity.toFixed(2));
       return {
         match: bestMatch,

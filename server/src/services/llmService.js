@@ -119,15 +119,15 @@ function extractStructuredText(parsed) {
 }
 
 export function buildGroundedFallbackAnswer(userMessage, groundedContext = '') {
-  if (groundedContext && groundedContext.includes('RELEVANT VERIFIED LEARNED KNOWLEDGE:')) {
-    const learnedMatch = groundedContext.match(/Answer:\s*([\s\S]+?)(?:\n\n[A-Z]|$)/);
-    if (learnedMatch && learnedMatch[1]?.trim()) {
-      return learnedMatch[1].trim();
-    }
-  }
-
   const lower = (userMessage || '').toLowerCase();
   const kb = loadKnowledge();
+
+  // 1. Identity & Full Form / Acronym Queries
+  const isFullFormQuery = /\b(full\s*form|stand\s*for|stands\s*for|acronym|abbreviation|what\s+is\s+itu|meaning\s+of\s+itu|about\s+itu)\b/i.test(lower);
+  if (isFullFormQuery) {
+    const u = kb?.university || {};
+    return `ITU stands for ${u.name || 'Information Technology University'} (officially Information Technology University of the Punjab), a public research university established in 2012 in Lahore, Pakistan.`;
+  }
   if (isCampusLocationQuery(lower)) {
     const campuses = kb?.university?.campuses || [];
     const mainCampus = campuses.find(campus => campus.id === 'main_astp') || campuses[0];
@@ -177,7 +177,18 @@ export function buildGroundedFallbackAnswer(userMessage, groundedContext = '') {
     }
 
     return `${transport.overview} The semester transport fee is PKR ${transport.semesterFee.amountPKR.toLocaleString()} per semester. ${transport.metroBusConnectivity.details}`;
+  }  const asksAdmissionEligibility = /\b(can\s+i\s+get\s+admission|eligib|admission\s+criteria|admission\s+requirements?|how\s+to\s+get\s+admission)\b/i.test(lower)
+    && /\b(bscs|bsai|computer science|artificial intelligence|undergraduate|programs?)\b/i.test(lower);
+
+  if (asksAdmissionEligibility) {
+    const bscs = kb?.academicPrograms?.undergraduate?.find(p => p.code === 'BSCS');
+    const bsai = kb?.academicPrograms?.undergraduate?.find(p => p.code === 'BSAI');
+    if (bscs || bsai) {
+      return "Yes! You can get admission into BSCS or BSAI at ITU if you satisfy the eligibility and aggregate merit criteria:\n\n1. **Academic Qualifications:** Minimum 50% overall marks in Intermediate (HSSC) Pre-Engineering, ICS (Mathematics, Physics, Computer Science), or Pre-Medical (with 6-credit Mathematics deficiency course in the first year per HEC), or A-Levels with Mathematics and minimum 50% IBCC equivalence.\n2. **Admission Test:** ITU Admissions Test (CS/AI Stream) OR a valid NTS-NAT (NAT-IE / NAT-ICS) / USAT score taken within the last 12 months.\n3. **Merit Formula:** Aggregate = (15% Matric) + (35% Intermediate Part-1/Total) + (50% Entry Test).\n4. **Previous Closing Merits:** BSCS closing merit was ~81.2% (projected ~82.0%), while BSAI closing merit was ~83.8% (projected ~84.5%).";
+    }
   }
+
+
 
   const admissionYearMatch = lower.match(/\b(20\d{2})\b/);
   const admissionKeywords = /admission|application|apply|deadline|intake|entry test|merit list|orientation|classes/;
@@ -220,22 +231,21 @@ export function buildGroundedFallbackAnswer(userMessage, groundedContext = '') {
 
   const asksFee = /\b(fee|tuition|cost|charges?|credit\s*hour)\b/i.test(lower);
   if (asksFee) {
-    const isZeroFeeQuery = /\b(0|zero|free|nil)\b/i.test(lower);
+    const isZeroFeeQuery = /\b(0|zero|free|nil|10|ten)\b/i.test(lower);
     if (isZeroFeeQuery) {
-      return "No, tuition at ITU is not free or 0 PKR. ITU charges tuition per credit hour (for example, BSCS is PKR 9,200 per credit hour, and BSAI is PKR 9,500 per credit hour, with estimated semester tuition ranging from PKR 156,400 to PKR 166,500). Merit-based and need-based financial aid and scholarships are available for eligible students.";
+      return "No, tuition at ITU is not free or nominal. ITU charges tuition per credit hour (for example, BSCS is PKR 9,200 per credit hour, and BSAI is PKR 9,500 per credit hour, with estimated semester tuition ranging from PKR 156,400 to PKR 166,500). Merit-based and need-based financial aid and scholarships are available for eligible students.";
     }
-  }
-
-  const asksAdmissionEligibility = /\b(can\s+i\s+get\s+admission|eligib|admission\s+criteria|admission\s+requirements?|how\s+to\s+get\s+admission)\b/i.test(lower)
-    && /\b(bscs|bsai|computer science|artificial intelligence|undergraduate|programs?)\b/i.test(lower);
-
-  if (asksAdmissionEligibility) {
-    const bscs = kb?.academicPrograms?.undergraduate?.find(p => p.code === 'BSCS');
-    const bsai = kb?.academicPrograms?.undergraduate?.find(p => p.code === 'BSAI');
+    const ug = kb?.academicPrograms?.undergraduate || [];
+    const bscs = ug.find(p => p.code === 'BSCS');
+    const bsai = ug.find(p => p.code === 'BSAI');
     if (bscs || bsai) {
-      return "Yes! You can get admission into BSCS or BSAI at ITU if you satisfy the eligibility and aggregate merit criteria:\n\n1. **Academic Qualifications:** Minimum 50% overall marks in Intermediate (HSSC) Pre-Engineering, ICS (Mathematics, Physics, Computer Science), or Pre-Medical (with 6-credit Mathematics deficiency course in the first year per HEC), or A-Levels with Mathematics and minimum 50% IBCC equivalence.\n2. **Admission Test:** ITU Admissions Test (CS/AI Stream) OR a valid NTS-NAT (NAT-IE / NAT-ICS) / USAT score taken within the last 12 months.\n3. **Merit Formula:** Aggregate = (15% Matric) + (35% Intermediate Part-1/Total) + (50% Entry Test).\n4. **Previous Closing Merits:** BSCS closing merit was ~81.2% (projected ~82.0%), while BSAI closing merit was ~83.8% (projected ~84.5%).";
+      const bscsPerCredit = bscs?.tuitionFee?.perCreditHourPKR ? `PKR ${bscs.tuitionFee.perCreditHourPKR.toLocaleString()}` : 'PKR 9,200';
+      const bsaiPerCredit = bsai?.tuitionFee?.perCreditHourPKR ? `PKR ${bsai.tuitionFee.perCreditHourPKR.toLocaleString()}` : 'PKR 9,500';
+      return `The fee structure for BS programs at ITU is as follows: BSCS is ${bscsPerCredit} per credit hour (estimated tuition per semester: PKR 156,400 to PKR 161,500); BSAI is ${bsaiPerCredit} per credit hour (estimated tuition per semester: PKR 161,500 to PKR 166,500). In addition, one-time admission fee is PKR 30,000 and refundable security deposit is PKR 10,000.`;
     }
   }
+
+  
 
   const isCampusQuery = /\bfacilities?\b|\blabs?\b|\blibrary\b|\bsociet(?:y|ies)\b|\bsports\b|student life|\bresearch\b|plan\s*9|\bincubation\b|\bindustry\b|\binnovation\b/.test(lower);
 
@@ -285,9 +295,12 @@ function normalizeModelResult(parsed, mode, userMessage, groundedContext = '') {
     : buildFallbackSuggestions(mode, userMessage);
 
   const fallbackText = buildGroundedFallbackAnswer(userMessage, groundedContext);
+  const finalText = (text && text.trim().length > 10 && !/^here is the requested information\.?$/i.test(text.trim()))
+    ? text.trim()
+    : (fallbackText || text || 'Here is the requested information.');
 
   return {
-    text: fallbackText || text,
+    text: finalText,
     suggestions
   };
 }
@@ -331,12 +344,13 @@ export async function generateResponse({ mode, userMessage, groundedContext = ''
     };
   }
 
+  const timeoutMs = Math.max(25000, Number(process.env.OLLAMA_TIMEOUT_MS) || 25000);
   try {
     // 1. Build system instruction & prompt with grounded context using promptTemplates.js
     const { systemInstruction, prompt } = buildPrompt(mode, userMessage, groundedContext, chatHistory);
 
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 4000);
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
     // 2. Send request to Ollama
     const res = await fetch('http://localhost:11434/api/generate', {
@@ -382,7 +396,7 @@ export async function generateResponse({ mode, userMessage, groundedContext = ''
 
   } catch (error) {
     const message = error?.name === 'AbortError'
-      ? 'Ollama generation timed out after 30s.'
+      ? `Ollama generation timed out after ${timeoutMs / 1000}s.`
       : error.message;
 
     console.error('LLM Generation Error:', message);
