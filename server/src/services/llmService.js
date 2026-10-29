@@ -218,6 +218,14 @@ export function buildGroundedFallbackAnswer(userMessage, groundedContext = '') {
     }
   }
 
+  const asksFee = /\b(fee|tuition|cost|charges?|credit\s*hour)\b/i.test(lower);
+  if (asksFee) {
+    const isZeroFeeQuery = /\b(0|zero|free|nil)\b/i.test(lower);
+    if (isZeroFeeQuery) {
+      return "No, tuition at ITU is not free or 0 PKR. ITU charges tuition per credit hour (for example, BSCS is PKR 9,200 per credit hour, and BSAI is PKR 9,500 per credit hour, with estimated semester tuition ranging from PKR 156,400 to PKR 166,500). Merit-based and need-based financial aid and scholarships are available for eligible students.";
+    }
+  }
+
   const asksAdmissionEligibility = /\b(can\s+i\s+get\s+admission|eligib|admission\s+criteria|admission\s+requirements?|how\s+to\s+get\s+admission)\b/i.test(lower)
     && /\b(bscs|bsai|computer science|artificial intelligence|undergraduate|programs?)\b/i.test(lower);
 
@@ -328,7 +336,7 @@ export async function generateResponse({ mode, userMessage, groundedContext = ''
     const { systemInstruction, prompt } = buildPrompt(mode, userMessage, groundedContext, chatHistory);
 
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 30000);
+    const timeoutId = setTimeout(() => controller.abort(), 4000);
 
     // 2. Send request to Ollama
     const res = await fetch('http://localhost:11434/api/generate', {

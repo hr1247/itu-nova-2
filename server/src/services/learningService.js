@@ -191,12 +191,13 @@ function normalizeQuestion(text) {
 
 function getQuestionIntent(text) {
   const normalized = normalizeQuestion(text);
-  if (/\b(name|who are you|what are you called|identify yourself|your identity)\b/.test(normalized)) {
-    return 'identity';
-  }
-  if (/\b(how are you|how have you been|how is it going|how are things|you doing)\b/.test(normalized)) {
-    return 'wellbeing';
-  }
+  if (/\b(fee|tuition|dues|cost|charges?|credit\s*hour)\b/.test(normalized)) return 'fee';
+  if (/\b(location|where|address|city|campus|building)\b/.test(normalized)) return 'location';
+  if (/\b(bus|transport|route|shuttle|stop|pickup)\b/.test(normalized)) return 'transport';
+  if (/\b(library|book|books|reading|database)\b/.test(normalized)) return 'library';
+  if (/\b(hostel|accommodation|stay|residence)\b/.test(normalized)) return 'hostel';
+  if (/\b(name|who are you|what are you called|identify yourself|your identity)\b/.test(normalized)) return 'identity';
+  if (/\b(how are you|how have you been|how is it going|how are things|you doing)\b/.test(normalized)) return 'wellbeing';
   return null;
 }
 

@@ -11,6 +11,15 @@ test('factCheckService rejects fee poisoning (claiming tuition is free or 0 PKR)
   assert.equal(result.verified, false);
   assert.equal(result.verdict, 'CONTRADICTED');
   assert.match(result.reason, /fee structure/i);
+
+  const result2 = await verifyCorrection({
+    question: 'fee structure of itu?',
+    correction: 'itu fee is 0'
+  });
+
+  assert.equal(result2.verified, false);
+  assert.equal(result2.verdict, 'CONTRADICTED');
+  assert.match(result2.reason, /fee structure/i);
 });
 
 test('factCheckService rejects location poisoning (claiming ITU is in Karachi)', async () => {

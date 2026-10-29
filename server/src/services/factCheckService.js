@@ -26,14 +26,28 @@ function checkCoreContradictions(question, correction) {
     };
   }
 
-  // 3. Fee poisoning check: claiming tuition is free or 0
-  if (/fee|tuition|cost|credit hour|charges/i.test(q) || /fee|tuition|cost/i.test(c)) {
-    if (/\b(free|0\s*pkr|zero|no fee|100\s*pkr|free of cost)\b/i.test(c) && !/scholarship|aid|waiver/i.test(c)) {
-      return {
-        verified: false,
-        verdict: 'CONTRADICTED',
-        reason: 'Rejected: Contradicts official fee structure. Regular degree tuition is not 0 PKR.'
-      };
+  // 3. Fee poisoning check: claiming tuition is free, 0, or absurdly low (< 5,000 PKR)
+  const mentionsFee = /\b(fee|tuition|dues|cost|charges?|credit\s*hour)\b/i.test(q) || /\b(fee|tuition|dues|cost|charges?)\b/i.test(c);
+  if (mentionsFee) {
+    const isExempt = /\b(scholarship|financial\s*aid|need-based|merit-based|waiver|discount)\b/i.test(c);
+    if (!isExempt) {
+      const cleanNumbers = c.replace(/,/g, '');
+      const claimsZeroOrFree = /\b(free|zero|nil|none|free\s+of\s+cost|free\s+of\s+charge|no\s+fee|no\s+charges?|no\s+tuition|without\s+any\s+fee)\b/i.test(cleanNumbers)
+        || /\b(?:fee|tuition|cost|charges?)\s*(?:is|are|=|:|was)?\s*(?:rs\.?|pkr)?\s*0\b/i.test(cleanNumbers)
+        || /\b0\s*(?:pkr|rs|rupees|\/-\s*|\/credit|\/semester)?\b/i.test(cleanNumbers)
+        || /\b(?:is|are|=|:)\s*0\b/i.test(cleanNumbers);
+
+      const tinyMatch = cleanNumbers.match(/\b(?:(?:rs\.?|pkr|rupees)\s*(\d+)|(\d+)\s*(?:rs\.?|pkr|rupees|\/-\s*)|(?:fee|tuition|cost)\s*(?:is|are|=|:)\s*(\d+))\b/i);
+      const tinyAmount = tinyMatch ? Number(tinyMatch[1] || tinyMatch[2] || tinyMatch[3]) : null;
+      const claimsTinyFee = tinyAmount !== null && tinyAmount > 0 && tinyAmount < 5000;
+
+      if (claimsZeroOrFree || claimsTinyFee) {
+        return {
+          verified: false,
+          verdict: 'CONTRADICTED',
+          reason: 'Rejected: Contradicts official fee structure. ITU degree tuition is not 0 PKR or negligible (minimum BS tuition is PKR 9,200 per credit hour).'
+        };
+      }
     }
   }
 
@@ -63,15 +77,15 @@ function checkCoreContradictions(question, correction) {
 }
 
 /**
- * Autonomous LLM Judge via OpenAI API.
+ * Autonomous LLM Judge via Google Gemini or OpenAI API.
  */
 async function callLlmJudge({ question, correction, officialContext, webEvidence }) {
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey || !apiKey.trim()) return null;
+  const geminiKey = process.env.GEMINI_API_KEY;
+  const openaiKey = process.env.OPENAI_API_KEY;
 
-  const model = process.env.OPENAI_MODEL || 'gpt-6.1-sol';
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 8000);
+  if ((!geminiKey || !geminiKey.trim()) && (!openaiKey || !openaiKey.trim())) {
+    return null;
+  }
 
   const prompt = `You are an automated university fact-checker and anti-poisoning guardrail for Information Technology University (ITU) Lahore.
 
@@ -96,42 +110,79 @@ Respond ONLY with valid JSON in this exact structure:
   "reason": "short explanation in 1 sentence"
 }`;
 
-  try {
-    const res = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        model,
-        messages: [{ role: 'user', content: prompt }],
-        temperature: 0.1,
-        max_tokens: 150
-      }),
-      signal: controller.signal
-    });
+  // 1. Try Gemini first if key available
+  if (geminiKey && geminiKey.trim()) {
+    try {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key=${geminiKey.trim()}`;
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: { temperature: 0.1, maxOutputTokens: 200 }
+        }),
+        signal: AbortSignal.timeout(6000)
+      });
 
-    if (!res.ok) return null;
-
-    const data = await res.json();
-    const raw = data?.choices?.[0]?.message?.content || '';
-    const jsonMatch = raw.match(/\{[\s\S]*?\}/);
-    if (!jsonMatch) return null;
-
-    const parsed = JSON.parse(jsonMatch[0]);
-    if (parsed.verdict === 'PLAUSIBLE' || parsed.verdict === 'CONTRADICTED') {
-      return {
-        verified: parsed.verdict === 'PLAUSIBLE',
-        verdict: parsed.verdict,
-        confidence: typeof parsed.confidence === 'number' ? parsed.confidence : 0.85,
-        reason: parsed.reason || (parsed.verdict === 'PLAUSIBLE' ? 'Verified as plausible.' : 'Contradicts verified data.')
-      };
+      if (res.ok) {
+        const data = await res.json();
+        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+        const jsonMatch = text.match(/\{[\s\S]*?\}/);
+        if (jsonMatch) {
+          const parsed = JSON.parse(jsonMatch[0]);
+          if (parsed.verdict === 'PLAUSIBLE' || parsed.verdict === 'CONTRADICTED') {
+            return {
+              verified: parsed.verdict === 'PLAUSIBLE',
+              verdict: parsed.verdict,
+              confidence: typeof parsed.confidence === 'number' ? parsed.confidence : 0.9,
+              reason: parsed.reason || (parsed.verdict === 'PLAUSIBLE' ? 'Verified as plausible.' : 'Contradicts verified data.')
+            };
+          }
+        }
+      }
+    } catch (err) {
+      console.warn('[FactCheck] Gemini judge error:', err.message);
     }
-  } catch (err) {
-    console.warn('[FactCheck] LLM Judge unavailable, using rules:', err.message);
-  } finally {
-    clearTimeout(timeoutId);
+  }
+
+  // 2. Try OpenAI fallback if key available
+  if (openaiKey && openaiKey.trim()) {
+    try {
+      const model = process.env.OPENAI_MODEL || 'gpt-6.1-sol';
+      const res = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${openaiKey}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          model,
+          messages: [{ role: 'user', content: prompt }],
+          temperature: 0.1,
+          max_tokens: 150
+        }),
+        signal: AbortSignal.timeout(6000)
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        const raw = data?.choices?.[0]?.message?.content || '';
+        const jsonMatch = raw.match(/\{[\s\S]*?\}/);
+        if (jsonMatch) {
+          const parsed = JSON.parse(jsonMatch[0]);
+          if (parsed.verdict === 'PLAUSIBLE' || parsed.verdict === 'CONTRADICTED') {
+            return {
+              verified: parsed.verdict === 'PLAUSIBLE',
+              verdict: parsed.verdict,
+              confidence: typeof parsed.confidence === 'number' ? parsed.confidence : 0.85,
+              reason: parsed.reason || (parsed.verdict === 'PLAUSIBLE' ? 'Verified as plausible.' : 'Contradicts verified data.')
+            };
+          }
+        }
+      }
+    } catch (err) {
+      console.warn('[FactCheck] OpenAI judge error:', err.message);
+    }
   }
 
   return null;
@@ -186,4 +237,3 @@ export async function verifyCorrection({ question, correction }) {
     reason: 'Passed autonomous rule-based consistency check.'
   };
 }
-
